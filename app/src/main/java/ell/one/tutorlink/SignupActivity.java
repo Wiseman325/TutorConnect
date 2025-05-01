@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
@@ -19,18 +20,16 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SignupActivity extends AppCompatActivity {
+import ell.one.tutorlink.database_handlers.FirebaseManager;
 
+public class SignupActivity extends AppCompatActivity {
     private EditText fullNameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
     private Button signupButton;
     private ImageView topBackgroundImage;
-    private TextView greetingText, disp1, disp2, disp3, disp4;
-    // Buttons
-    Button signUp_btn;
+    private TextView greetingText, disp1, disp2, disp3, disp4, textViewLogin;
+    private RadioGroup roleRadioGroup;
 
-    EditText signupEmail, signupPassword;
-
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,27 +42,23 @@ public class SignupActivity extends AppCompatActivity {
             return insets;
         });
 
-        signUp_btn = findViewById(R.id.signup_button);
-
-        signUp_btn.setOnClickListener(v -> {
-            Intent intent = new Intent(SignupActivity.this,LoginActivity.class);
-            startActivity(intent);
+        textViewLogin = findViewById(R.id.textViewLogin);
+        textViewLogin.setOnClickListener(v -> {
+            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
             finish();
         });
 
-        // Firebase
+        // Initialize Firebase
         mAuth = FirebaseAuth.getInstance();
 
-        // Inputs
+        // UI elements
         fullNameEditText = findViewById(R.id.fullname_singup);
         emailEditText = findViewById(R.id.signup_email);
         passwordEditText = findViewById(R.id.signup_password);
         confirmPasswordEditText = findViewById(R.id.signup_conf_pass);
-
-        // Button
+        roleRadioGroup = findViewById(R.id.role_radio_group);
         signupButton = findViewById(R.id.signup_button);
 
-        // Optional: UI decorations
         topBackgroundImage = findViewById(R.id.disp5);
         greetingText = findViewById(R.id.textView3);
         disp1 = findViewById(R.id.disp1);
@@ -71,13 +66,23 @@ public class SignupActivity extends AppCompatActivity {
         disp3 = findViewById(R.id.disp3);
         disp4 = findViewById(R.id.disp4);
 
-        // Sign Up logic
         signupButton.setOnClickListener(v -> {
             String fullName = fullNameEditText.getText().toString().trim();
             String email = emailEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
             String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
+            int selectedRoleId = roleRadioGroup.getCheckedRadioButtonId();
+            if (selectedRoleId == -1) {
+                Toast.makeText(this, "Please select a role", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String role = "guest"; // default
+            if (selectedRoleId == R.id.radio_tutor) role = "tutor";
+            else if (selectedRoleId == R.id.radio_tutee) role = "tutee";
+
+            // Field validations
             if (TextUtils.isEmpty(fullName)) {
                 fullNameEditText.setError("Full Name is required");
                 return;
@@ -103,17 +108,9 @@ public class SignupActivity extends AppCompatActivity {
                 return;
             }
 
-            // Firebase Authentication
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(SignupActivity.this, "Account created successfully!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-                            finish();
-                        } else {
-                            Toast.makeText(SignupActivity.this, "Signup failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            // Register user with FirebaseManager
+            FirebaseManager firebaseManager = new FirebaseManager(SignupActivity.this);
+            firebaseManager.registerUser(email, password, fullName, role);
         });
     }
 }

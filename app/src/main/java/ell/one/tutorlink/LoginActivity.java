@@ -1,6 +1,8 @@
 package ell.one.tutorlink;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,12 +17,16 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ell.one.tutorlink.database_handlers.FirebaseManager;
+
 public class LoginActivity extends AppCompatActivity {
+    TextView textViewSignup;
 
-    EditText loginEmail, loginPassword;
-    Button loginButton;
+    private EditText loginEmail, loginPassword;
+    private Button loginButton;
 
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
+    private FirebaseManager firebaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,27 +39,36 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        mAuth = FirebaseAuth.getInstance();
+        textViewSignup = findViewById(R.id.textViewSignup);
+        textViewSignup.setOnClickListener(v -> {
+            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+        });
 
-        loginEmail = findViewById(R.id.login_email); // Make sure your XML has this ID
-        loginPassword = findViewById(R.id.login_pass); // Same here
-        loginButton = findViewById(R.id.login_button); // Button ID in XML
+        // Initialize Firebase
+        mAuth = FirebaseAuth.getInstance();
+        firebaseManager = new FirebaseManager(this);
+
+        // Input fields
+        loginEmail = findViewById(R.id.login_email);
+        loginPassword = findViewById(R.id.login_pass);
+        loginButton = findViewById(R.id.login_button);
 
         loginButton.setOnClickListener(v -> {
             String email = loginEmail.getText().toString().trim();
             String password = loginPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            // Validate inputs
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            // Firebase login
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            // Navigate to Home or Dashboard
+                            firebaseManager.navigateBasedOnRole(LoginActivity.this);
                         } else {
                             Toast.makeText(this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
