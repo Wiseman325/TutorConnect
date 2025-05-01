@@ -1,0 +1,176 @@
+package ell.one.tutorlink;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+public class ProfileActivity extends AppCompatActivity {
+
+    TextView profileName, profileEmail, profileUsername, profileStudentNo, profilePhoneNo;
+    private String profile_name, profile_email, profile_username, profile_studentNo, profile_phone;
+    TextView bookAppointment;
+    Button editProfile, changePassword;
+    FirebaseAuth firebaseAuth;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_profile);
+
+        profileName = findViewById(R.id.profileName);
+        profileStudentNo = findViewById(R.id.profileStudentNo);
+        profilePhoneNo = findViewById(R.id.profilePhone);
+        profileEmail = findViewById(R.id.profileEmail);
+        profileUsername = findViewById(R.id.profileUsername);
+        editProfile = findViewById(R.id.editButton);
+        changePassword = findViewById(R.id.changePassword);
+        bookAppointment = findViewById(R.id.book_app_text);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser == null){
+            Toast.makeText(this, "Cannot get user details", Toast.LENGTH_LONG).show();
+        }else {
+            checkEmailVarification(firebaseUser);
+            showAllUserData(firebaseUser);
+        }
+
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ChangePasswordActivity.class));
+            }
+        });
+
+        bookAppointment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), AppointmentActivity.class));
+            }
+        });
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+            }
+        });
+
+    }
+
+    private void checkEmailVarification(FirebaseUser firebaseUser) {
+        if (!firebaseUser.isEmailVerified()){
+            displayDialogBox();
+        }
+    }
+
+    private void displayDialogBox() {
+
+//        set alert box
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+        builder.setTitle("Verify Email");
+        builder.setMessage("Please verify your Email to save your data.");
+
+//        open email app
+        builder.setPositiveButton("Verify", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+//        create dialog box
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public void showAllUserData(FirebaseUser firebaseUser){
+        String userID = firebaseUser.getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HelperClass helperClass = snapshot.getValue(HelperClass.class);
+                if (helperClass != null){
+                    profile_name = helperClass.name;
+                    profile_email = firebaseUser.getEmail();
+                    profile_username = helperClass.username;
+                    profile_studentNo = helperClass.studentNo;
+                    profile_phone = helperClass.phoneNo;
+
+                    profileStudentNo.setText(profile_studentNo);
+                    profilePhoneNo.setText(profile_phone);
+                    profileName.setText(profile_name);
+                    profileEmail.setText(profile_email);
+                    profileUsername.setText(profile_username);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        inflate menu items
+        getMenuInflater().inflate(R.menu.nav_menus, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+//    on item selected
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int itemID = item.getItemId();
+
+        if (itemID == R.id.nav_home){
+            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        } else if (itemID == R.id.nav_prof) {
+            startActivity(new Intent(getIntent()));
+        } else if (itemID == R.id.nav_history) {
+            Intent intent = new Intent(ProfileActivity.this, HistoryActivity.class);
+            startActivity(intent);
+        } else if (itemID == R.id.nav_password) {
+            Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
+            startActivity(intent);
+        } else if (itemID == R.id.nav_comment) {
+            startActivity(new Intent(ProfileActivity.this, CommentActivity.class));
+        } else if (itemID == R.id.nav_logout) {
+            Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

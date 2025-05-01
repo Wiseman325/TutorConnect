@@ -30,7 +30,7 @@ public class IntroActivity extends AppCompatActivity {
         btn_getStarted = findViewById(R.id.wlcm_btn);
 
         btn_getStarted.setOnClickListener(v -> {
-            Intent intent = new Intent(IntroActivity.this, SignupActivity.class);
+            Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         });
