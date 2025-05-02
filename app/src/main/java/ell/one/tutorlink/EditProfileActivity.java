@@ -16,21 +16,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     EditText editName, editEmailText, editPhoneNo, editUsername, editBio, editSpecialization, editRate;
     Button saveButton, cancelButton;
 
-    String nameUser, emailUser, usernameUser, phoneUser, bioUser, specializationUser, rateUser;
-
-    DatabaseReference reference;
     FirebaseAuth firebaseAuth;
+    FirebaseManager firebaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,23 +43,39 @@ public class EditProfileActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancelButton);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseManager = new FirebaseManager(this);
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        assert firebaseUser != null;
-        showData(firebaseUser);
+        if (firebaseUser != null) {
+            showData();
+        }
 
         saveButton.setOnClickListener(v -> updateUserProfile(firebaseUser));
         cancelButton.setOnClickListener(v -> finish());
     }
 
+    private void showData() {
+        firebaseManager.getUserProfile(profile -> {
+            if (profile != null) {
+                editName.setText(profile.getName());
+                editEmailText.setText(firebaseAuth.getCurrentUser().getEmail()); // Auth email
+                editPhoneNo.setText(profile.getPhoneNo());
+                editBio.setText(profile.getBio());
+                editSpecialization.setText(profile.getSpecialization());
+                editRate.setText(profile.getRate());
+            } else {
+                Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void updateUserProfile(FirebaseUser firebaseUser) {
-        nameUser = editName.getText().toString().trim();
-        emailUser = editEmailText.getText().toString().trim();
-        usernameUser = editUsername.getText().toString().trim();
-        phoneUser = editPhoneNo.getText().toString().trim();
-        bioUser = editBio.getText().toString().trim();
-        specializationUser = editSpecialization.getText().toString().trim();
-        rateUser = editRate.getText().toString().trim();
+        String nameUser = editName.getText().toString().trim();
+        String emailUser = editEmailText.getText().toString().trim();
+        String phoneUser = editPhoneNo.getText().toString().trim();
+        String bioUser = editBio.getText().toString().trim();
+        String specializationUser = editSpecialization.getText().toString().trim();
+        String rateUser = editRate.getText().toString().trim();
 
         // Validation
         if (TextUtils.isEmpty(nameUser)) {
@@ -93,13 +104,12 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        HelperClass helperClass = new HelperClass(nameUser, emailUser, phoneUser, bioUser, specializationUser, rateUser);
+        HelperClass updatedProfile = new HelperClass(nameUser, emailUser, phoneUser, bioUser, specializationUser, rateUser);
 
-        reference = FirebaseDatabase.getInstance().getReference("users");
-        String userID = firebaseUser.getUid();
 
-        reference.child(userID).setValue(helperClass).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+        firebaseManager.updateUserProfile(updatedProfile, new FirebaseManager.OnProfileUpdateListener() {
+            @Override
+            public void onUpdateSuccess() {
                 UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
                         .setDisplayName(nameUser)
                         .build();
@@ -110,41 +120,11 @@ public class EditProfileActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
-            } else {
+            }
+
+            @Override
+            public void onUpdateFailure(Exception e) {
                 Toast.makeText(EditProfileActivity.this, "Could not update profile", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    public void showData(FirebaseUser firebaseUser) {
-        String userID = firebaseUser.getUid();
-        reference = FirebaseDatabase.getInstance().getReference("users");
-
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HelperClass helperClass = snapshot.getValue(HelperClass.class);
-                if (helperClass != null) {
-                    nameUser = helperClass.getName();
-                    emailUser = firebaseUser.getEmail(); // always use auth email
-                    phoneUser = helperClass.getPhoneNo();
-                    bioUser = helperClass.getBio();
-                    specializationUser = helperClass.getSpecialization();
-                    rateUser = helperClass.getRate();
-
-                    editName.setText(nameUser);
-                    editEmailText.setText(emailUser);
-                    editPhoneNo.setText(phoneUser);
-                    editUsername.setText(usernameUser);
-                    editBio.setText(bioUser);
-                    editSpecialization.setText(specializationUser);
-                    editRate.setText(rateUser);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(EditProfileActivity.this, "Error loading data", Toast.LENGTH_SHORT).show();
             }
         });
     }

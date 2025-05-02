@@ -22,13 +22,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import ell.one.tutorlink.database_handlers.FirebaseManager;
+
 public class ProfileActivity extends AppCompatActivity {
     TextView profileBio, profileSpecialization, profileRate;
     private String profile_bio, profile_specialization, profile_rate;
 
 
-    TextView profileName, profileEmail, profileUsername, profileStudentNo, profilePhoneNo;
-    private String profile_name, profile_email, profile_username, profile_studentNo, profile_phone;
+    TextView profileName, profileEmail, profilePhoneNo;
+    private String profile_name, profile_email, profile_phone;
     TextView bookAppointment;
     Button editProfile, changePassword;
     FirebaseAuth firebaseAuth;
@@ -55,8 +57,9 @@ public class ProfileActivity extends AppCompatActivity {
         if (firebaseUser == null){
             Toast.makeText(this, "Cannot get user details", Toast.LENGTH_LONG).show();
         }else {
-            checkEmailVarification(firebaseUser);
-            showAllUserData(firebaseUser);
+//            checkEmailVarification(firebaseUser);
+            showAllUserData();
+
         }
 
         changePassword.setOnClickListener(new View.OnClickListener() {
@@ -110,38 +113,35 @@ public class ProfileActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void showAllUserData(FirebaseUser firebaseUser){
-        String userID = firebaseUser.getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void showAllUserData() {
+        FirebaseManager firebaseManager = new FirebaseManager(this);
+        firebaseManager.getUserProfile(new FirebaseManager.OnUserProfileRetrieved() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HelperClass helperClass = snapshot.getValue(HelperClass.class);
-                if (helperClass != null){
-                    profile_name = helperClass.name;
-                    profile_email = firebaseUser.getEmail();
-                    profile_phone = helperClass.phoneNo;
+            public void onUserProfileLoaded(HelperClass profile) {
+                if (profile != null) {
+                    profile_name = profile.name;
+                    profile_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                    profile_phone = profile.phoneNo;
 
-                    profile_bio = helperClass.bio;
-                    profile_specialization = helperClass.specialization;
-                    profile_rate = helperClass.rate;
+                    profile_bio = profile.bio;
+                    profile_specialization = profile.specialization;
+                    profile_rate = profile.rate;
 
-                    profilePhoneNo.setText(profile_phone);
                     profileName.setText(profile_name);
                     profileEmail.setText(profile_email);
+                    profilePhoneNo.setText(profile_phone);
 
                     profileBio.setText(profile_bio);
                     profileSpecialization.setText(profile_specialization);
                     profileRate.setText("R " + profile_rate + " / hour");
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Failed to load profile", Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

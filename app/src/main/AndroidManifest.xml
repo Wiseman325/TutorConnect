@@ -23,8 +23,6 @@
             android:exported="false"
             android:theme="@style/Theme.TutorLink" />
 
-        <activity android:name=".activities.TutorHomeActivity" />
-
         <activity
             android:name=".DeleteProfileActivity"
             android:exported="false" />

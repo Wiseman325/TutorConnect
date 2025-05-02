@@ -44,6 +44,7 @@ public class tutor_home extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> {
             // TODO: Replace with actual ProfileActivity
             Toast.makeText(this, "Manage Profile clicked", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(tutor_home.this, ProfileActivity.class));
         });
 
         btnSetAvailability.setOnClickListener(v -> {
