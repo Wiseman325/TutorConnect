@@ -13,14 +13,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ell.one.tutorlink.HelperClass;
 import ell.one.tutorlink.LoginActivity;
 import ell.one.tutorlink.SignupActivity;
-import ell.one.tutorlink.activities.GuestActivity;
-import ell.one.tutorlink.activities.TuteeHomeActivity;
-import ell.one.tutorlink.activities.TutorHomeActivity;
 import ell.one.tutorlink.guest;
 import ell.one.tutorlink.tutee_home;
 import ell.one.tutorlink.tutor_home;
@@ -212,6 +210,43 @@ public class FirebaseManager {
             listener.onUpdateFailure(new Exception("No user signed in"));
         }
     }
+
+
+    public interface AvailabilitySaveListener {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
+
+
+
+    public void saveAvailabilityForDay(String day, List<String> timeSlots, AvailabilitySaveListener listener) {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            String userId = user.getUid();
+
+            Map<String, Object> daySchedule = new HashMap<>();
+            daySchedule.put("timeSlots", timeSlots);
+
+            db.collection("users")
+                    .document(userId)
+                    .collection("availability")
+                    .document(day)
+                    .set(daySchedule)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Availability saved for " + day);
+                        listener.onSuccess();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Failed to save availability for " + day, e);
+                        listener.onFailure(e);
+                    });
+        } else {
+            listener.onFailure(new Exception("User not authenticated"));
+        }
+    }
+
+
 
 
     public boolean isEmailVerified() {

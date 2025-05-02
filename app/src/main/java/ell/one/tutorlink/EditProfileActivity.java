@@ -6,8 +6,10 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,23 +23,26 @@ import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    EditText editName, editEmailText, editPhoneNo, editUsername, editBio, editSpecialization, editRate;
+    EditText editName, editEmailText, editPhoneNo, editBio, editRate;
+    Spinner specializationSpinner;
     Button saveButton, cancelButton;
 
     FirebaseAuth firebaseAuth;
     FirebaseManager firebaseManager;
+    ArrayAdapter<CharSequence> specializationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+
         // Bind views
         editName = findViewById(R.id.editName);
         editEmailText = findViewById(R.id.editEmail);
         editPhoneNo = findViewById(R.id.editPhone);
         editBio = findViewById(R.id.editBio);
-        editSpecialization = findViewById(R.id.editSpecialization);
+        specializationSpinner = findViewById(R.id.specializationSpinner);
         editRate = findViewById(R.id.editRate);
         saveButton = findViewById(R.id.saveButton);
         cancelButton = findViewById(R.id.cancelButton);
@@ -45,6 +50,15 @@ public class EditProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseManager = new FirebaseManager(this);
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        // Set up spinner adapter
+        specializationAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.specializations_array,
+                android.R.layout.simple_spinner_item
+        );
+        specializationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        specializationSpinner.setAdapter(specializationAdapter);
 
         if (firebaseUser != null) {
             showData();
@@ -61,8 +75,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 editEmailText.setText(firebaseAuth.getCurrentUser().getEmail()); // Auth email
                 editPhoneNo.setText(profile.getPhoneNo());
                 editBio.setText(profile.getBio());
-                editSpecialization.setText(profile.getSpecialization());
                 editRate.setText(profile.getRate());
+
+                // Set selected specialization in spinner
+                String currentSpecialization = profile.getSpecialization();
+                int position = specializationAdapter.getPosition(currentSpecialization);
+                if (position >= 0) {
+                    specializationSpinner.setSelection(position);
+                }
             } else {
                 Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
             }
@@ -74,7 +94,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String emailUser = editEmailText.getText().toString().trim();
         String phoneUser = editPhoneNo.getText().toString().trim();
         String bioUser = editBio.getText().toString().trim();
-        String specializationUser = editSpecialization.getText().toString().trim();
+        String specializationUser = specializationSpinner.getSelectedItem().toString();
         String rateUser = editRate.getText().toString().trim();
 
         // Validation
@@ -105,7 +125,6 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         HelperClass updatedProfile = new HelperClass(nameUser, emailUser, phoneUser, bioUser, specializationUser, rateUser);
-
 
         firebaseManager.updateUserProfile(updatedProfile, new FirebaseManager.OnProfileUpdateListener() {
             @Override

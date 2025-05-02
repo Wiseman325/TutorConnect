@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Day label to be updated from Java -->
+        <TextView
+            android:id="@+id/dayLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Day Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/dark" />
+
+        <!-- User input for time slots -->
+        <EditText
+            android:id="@+id/timeSlotsInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="e.g. 08:00–10:00, 14:00–16:00"
+            android:inputType="text"
+            android:background="@drawable/edit_text"
+            android:textColor="@color/black"
+            android:padding="12dp" />
+
+        <!-- Optional container for advanced time slot UI -->
+        <LinearLayout
+            android:id="@+id/timeSlotsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" />
+
+        <!-- Add more slots button (optional, dynamic feature) -->
+        <Button
+            android:id="@+id/addSlotButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Add Time Slot"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/green"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -50,6 +50,8 @@ public class tutor_home extends AppCompatActivity {
         btnSetAvailability.setOnClickListener(v -> {
             // TODO: Replace with AvailabilityActivity
             Toast.makeText(this, "Set Availability clicked", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(tutor_home.this, set_availability.class));
+
         });
 
         btnSessionRequests.setOnClickListener(v -> {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:padding="16dp"
+android:id="@+id/main"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".set_availability">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Your Weekly Availability"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Repeatable Day Card Layout -->
+        <!-- You can copy-paste and change IDs for each day -->
+        <!-- MONDAY -->
+        <include layout="@layout/availability_day_card" android:id="@+id/mondayCard"/>
+        <!-- TUESDAY -->
+        <include layout="@layout/availability_day_card" android:id="@+id/tuesdayCard"/>
+        <!-- WEDNESDAY -->
+        <include layout="@layout/availability_day_card" android:id="@+id/wednesdayCard"/>
+        <!-- THURSDAY -->
+        <include layout="@layout/availability_day_card" android:id="@+id/thursdayCard"/>
+        <!-- FRIDAY -->
+        <include layout="@layout/availability_day_card" android:id="@+id/fridayCard"/>
+        <!-- SATURDAY -->
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/submitAvailability"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Availability"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/blue"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+</ScrollView>

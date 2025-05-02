@@ -94,4 +94,24 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+
+    <string-array name="specializations_array">
+        <item>Mathematics</item>
+        <item>Physics</item>
+        <item>Chemistry</item>
+        <item>Biology</item>
+        <item>English</item>
+        <item>Accounting</item>
+        <item>Economics</item>
+        <item>Business Management</item>
+        <item>Computer Science</item>
+        <item>Information Systems</item>
+        <item>Software Engineering</item>
+        <item>Statistics</item>
+        <item>Programming Fundamentals</item>
+        <item>Artificial Intelligence</item>
+        <item>Data Structures</item>
+    </string-array>
+
+
 </resources>
