@@ -13,9 +13,18 @@
         android:theme="@style/Theme.TutorLink"
         tools:targetApi="31" >
         <activity
+            android:name=".guest"
+            android:exported="false" />
+        <activity
+            android:name=".tutee_home"
+            android:exported="false" />
+        <activity
             android:name=".tutor_home"
             android:exported="false"
             android:theme="@style/Theme.TutorLink" />
+
+        <activity android:name=".activities.TutorHomeActivity" />
+
         <activity
             android:name=".DeleteProfileActivity"
             android:exported="false" />

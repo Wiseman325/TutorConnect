@@ -2,7 +2,7 @@ package ell.one.tutorlink;
 
 public class HelperClass {
 
-    String name, email,phoneNo, studentNo, username;
+    String name, email,phoneNo, studentNo, username, bio, specialization, rate;
 
     public String getName() {
         return name;
@@ -28,28 +28,37 @@ public class HelperClass {
         this.phoneNo = phoneNo;
     }
 
-    public String getStudentNo() {
-        return studentNo;
+    public String getBio() {
+        return bio;
     }
 
-    public void setStudentNo(String studentNo) {
-        this.studentNo = studentNo;
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
-    public String getUsername() {
-        return username;
+    public String getSpecialization() {
+        return specialization;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 
-    public HelperClass(String name, String email, String phoneNo, String studentNo, String username) {
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    public HelperClass(String name, String email, String phoneNo, String bio, String specialization, String rate) {
         this.name = name;
         this.email = email;
         this.phoneNo = phoneNo;
-        this.studentNo = studentNo;
-        this.username = username;
+        this.bio = bio;
+        this.specialization = specialization;
+        this.rate = rate;
     }
 
     public HelperClass() {

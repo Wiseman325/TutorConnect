@@ -23,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
+    TextView profileBio, profileSpecialization, profileRate;
+    private String profile_bio, profile_specialization, profile_rate;
+
 
     TextView profileName, profileEmail, profileUsername, profileStudentNo, profilePhoneNo;
     private String profile_name, profile_email, profile_username, profile_studentNo, profile_phone;
@@ -35,11 +38,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        profileBio = findViewById(R.id.profileBio);
+        profileSpecialization = findViewById(R.id.profileSpecialization);
+        profileRate = findViewById(R.id.profileRate);
+
         profileName = findViewById(R.id.profileName);
-        profileStudentNo = findViewById(R.id.profileStudentNo);
         profilePhoneNo = findViewById(R.id.profilePhone);
         profileEmail = findViewById(R.id.profileEmail);
-        profileUsername = findViewById(R.id.profileUsername);
         editProfile = findViewById(R.id.editButton);
         changePassword = findViewById(R.id.changePassword);
         bookAppointment = findViewById(R.id.book_app_text);
@@ -115,15 +120,19 @@ public class ProfileActivity extends AppCompatActivity {
                 if (helperClass != null){
                     profile_name = helperClass.name;
                     profile_email = firebaseUser.getEmail();
-                    profile_username = helperClass.username;
-                    profile_studentNo = helperClass.studentNo;
                     profile_phone = helperClass.phoneNo;
 
-                    profileStudentNo.setText(profile_studentNo);
+                    profile_bio = helperClass.bio;
+                    profile_specialization = helperClass.specialization;
+                    profile_rate = helperClass.rate;
+
                     profilePhoneNo.setText(profile_phone);
                     profileName.setText(profile_name);
                     profileEmail.setText(profile_email);
-                    profileUsername.setText(profile_username);
+
+                    profileBio.setText(profile_bio);
+                    profileSpecialization.setText(profile_specialization);
+                    profileRate.setText("R " + profile_rate + " / hour");
                 }
             }
 

@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,8 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -27,9 +24,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    EditText editName, editStudentNo, editPhoneNo, editUsername, editEmailText;
+    EditText editName, editEmailText, editPhoneNo, editUsername, editBio, editSpecialization, editRate;
     Button saveButton, cancelButton;
-    String nameUser, emailUser, usernameUser, phoneUser, studentNoUser;
+
+    String nameUser, emailUser, usernameUser, phoneUser, bioUser, specializationUser, rateUser;
+
     DatabaseReference reference;
     FirebaseAuth firebaseAuth;
 
@@ -38,11 +37,13 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        // Bind views
         editName = findViewById(R.id.editName);
-        editEmailText = findViewById(R.id.editEmailText);
-        editStudentNo = findViewById(R.id.editStudentNo);
-        editUsername = findViewById(R.id.editUsername);
-        editPhoneNo = findViewById(R.id.editPhoneNo);
+        editEmailText = findViewById(R.id.editEmail);
+        editPhoneNo = findViewById(R.id.editPhone);
+        editBio = findViewById(R.id.editBio);
+        editSpecialization = findViewById(R.id.editSpecialization);
+        editRate = findViewById(R.id.editRate);
         saveButton = findViewById(R.id.saveButton);
         cancelButton = findViewById(R.id.cancelButton);
 
@@ -52,132 +53,115 @@ public class EditProfileActivity extends AppCompatActivity {
         assert firebaseUser != null;
         showData(firebaseUser);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUserProfile(firebaseUser);
-            }
-        });
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getIntent()));
-            }
-        });
+        saveButton.setOnClickListener(v -> updateUserProfile(firebaseUser));
+        cancelButton.setOnClickListener(v -> finish());
     }
 
     private void updateUserProfile(FirebaseUser firebaseUser) {
+        nameUser = editName.getText().toString().trim();
+        emailUser = editEmailText.getText().toString().trim();
+        usernameUser = editUsername.getText().toString().trim();
+        phoneUser = editPhoneNo.getText().toString().trim();
+        bioUser = editBio.getText().toString().trim();
+        specializationUser = editSpecialization.getText().toString().trim();
+        rateUser = editRate.getText().toString().trim();
 
-        studentNoUser = editStudentNo.getText().toString();
-        emailUser = editEmailText.getText().toString();
-        nameUser = editName.getText().toString();
-        phoneUser = editPhoneNo.getText().toString();
-        usernameUser = editUsername.getText().toString();
-
-        String error = "";
-        if (TextUtils.isEmpty(nameUser)){
-            error = "Name is required";
+        // Validation
+        if (TextUtils.isEmpty(nameUser)) {
+            editName.setError("Name is required");
             editName.requestFocus();
-        } else if (TextUtils.isEmpty(emailUser)) {
-            error = "Email address is required";
-            editEmailText.requestFocus();
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(emailUser).matches()) {
-            error = "Please enter a valid email address";
-            editEmailText.requestFocus();
-        } else if (TextUtils.isEmpty(usernameUser)) {
-            error = "Username is required";
-            editUsername.requestFocus();
-        } else if (TextUtils.isEmpty(studentNoUser)) {
-            error = "Student number is required";
-            editStudentNo.requestFocus();
-        } else if (TextUtils.isEmpty(phoneUser)) {
-            error = "Phone number is required";
-            editPhoneNo.requestFocus();
-        } else if (phoneUser.length() != 10) {
-            error = "Phone number must be 10 digits long";
-            editPhoneNo.requestFocus();
-        } else {
-
-//            insert data into database
-            HelperClass helperClass = new HelperClass(nameUser, emailUser, studentNoUser, phoneUser, usernameUser);
-
-//            get the reference to users
-            reference = FirebaseDatabase.getInstance().getReference("users");
-
-            String userID = firebaseUser.getUid();
-
-            reference.child(userID).setValue(helperClass).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(nameUser).build();
-                        firebaseUser.updateProfile(userProfileChangeRequest);
-                        Toast.makeText(EditProfileActivity.this, "Profile updated", Toast.LENGTH_LONG).show();
-
-                        Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
-                    }else{
-                        Toast.makeText(EditProfileActivity.this, "Could not update profile details", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+            return;
         }
-        Toast.makeText(this, "" + error, Toast.LENGTH_LONG).show();
-    }
+        if (TextUtils.isEmpty(emailUser)) {
+            editEmailText.setError("Email is required");
+            editEmailText.requestFocus();
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailUser).matches()) {
+            editEmailText.setError("Invalid email format");
+            editEmailText.requestFocus();
+            return;
+        }
+        if (TextUtils.isEmpty(phoneUser)) {
+            editPhoneNo.setError("Phone number is required");
+            editPhoneNo.requestFocus();
+            return;
+        }
+        if (phoneUser.length() != 10) {
+            editPhoneNo.setError("Phone number must be 10 digits");
+            editPhoneNo.requestFocus();
+            return;
+        }
 
-    public void showData(FirebaseUser firebaseUser){
+        HelperClass helperClass = new HelperClass(nameUser, emailUser, phoneUser, bioUser, specializationUser, rateUser);
+
+        reference = FirebaseDatabase.getInstance().getReference("users");
         String userID = firebaseUser.getUid();
 
+        reference.child(userID).setValue(helperClass).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(nameUser)
+                        .build();
+                firebaseUser.updateProfile(userProfileChangeRequest);
+
+                Toast.makeText(EditProfileActivity.this, "Profile updated", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(EditProfileActivity.this, "Could not update profile", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void showData(FirebaseUser firebaseUser) {
+        String userID = firebaseUser.getUid();
         reference = FirebaseDatabase.getInstance().getReference("users");
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HelperClass helperClass = snapshot.getValue(HelperClass.class);
-                if (helperClass != null){
-                    nameUser = helperClass.name;
-                    emailUser = firebaseUser.getEmail();
-                    usernameUser = helperClass.username;
-                    studentNoUser = helperClass.studentNo;
-                    phoneUser = helperClass.phoneNo;
+                if (helperClass != null) {
+                    nameUser = helperClass.getName();
+                    emailUser = firebaseUser.getEmail(); // always use auth email
+                    phoneUser = helperClass.getPhoneNo();
+                    bioUser = helperClass.getBio();
+                    specializationUser = helperClass.getSpecialization();
+                    rateUser = helperClass.getRate();
 
-                    editStudentNo.setText(studentNoUser);
-                    editEmailText.setText(emailUser);
                     editName.setText(nameUser);
+                    editEmailText.setText(emailUser);
                     editPhoneNo.setText(phoneUser);
                     editUsername.setText(usernameUser);
+                    editBio.setText(bioUser);
+                    editSpecialization.setText(specializationUser);
+                    editRate.setText(rateUser);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(EditProfileActivity.this, "Error loading data", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        inflate menu items
         getMenuInflater().inflate(R.menu.nav_menus, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    //    on item selected
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         int itemID = item.getItemId();
 
-        if (itemID == R.id.nav_home){
+        if (itemID == R.id.nav_home) {
             Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         } else if (itemID == R.id.nav_prof) {
@@ -187,8 +171,7 @@ public class EditProfileActivity extends AppCompatActivity {
         } else if (itemID == R.id.nav_logout) {
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }

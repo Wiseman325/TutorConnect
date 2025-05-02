@@ -15,11 +15,15 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.Map;
 
+import ell.one.tutorlink.HelperClass;
 import ell.one.tutorlink.LoginActivity;
 import ell.one.tutorlink.SignupActivity;
 import ell.one.tutorlink.activities.GuestActivity;
 import ell.one.tutorlink.activities.TuteeHomeActivity;
 import ell.one.tutorlink.activities.TutorHomeActivity;
+import ell.one.tutorlink.guest;
+import ell.one.tutorlink.tutee_home;
+import ell.one.tutorlink.tutor_home;
 
 public class FirebaseManager {
 
@@ -132,14 +136,14 @@ public class FirebaseManager {
                             Intent intent;
                             switch (role) {
                                 case "tutor":
-                                    intent = new Intent(context, TutorHomeActivity.class);
+                                    intent = new Intent(context, tutor_home.class);
                                     break;
                                 case "tutee":
-                                    intent = new Intent(context, TuteeHomeActivity.class);
+                                    intent = new Intent(context, tutee_home.class);
                                     break;
                                 case "guest":
                                 default:
-                                    intent = new Intent(context, GuestActivity.class);
+                                    intent = new Intent(context, guest.class);
                                     break;
                             }
 
@@ -158,5 +162,62 @@ public class FirebaseManager {
             Toast.makeText(context, "User not signed in", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    public interface OnUserProfileRetrieved {
+        void onUserProfileLoaded(HelperClass profile);
+    }
+
+    public void getUserProfile(OnUserProfileRetrieved callback) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            db.collection("users").document(user.getUid())
+                    .get()
+                    .addOnSuccessListener(snapshot -> {
+                        if (snapshot.exists()) {
+                            HelperClass profile = snapshot.toObject(HelperClass.class);
+                            callback.onUserProfileLoaded(profile);
+                        } else {
+                            Log.w(TAG, "getUserProfile: Document does not exist");
+                            callback.onUserProfileLoaded(null);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "getUserProfile: Failed to retrieve", e);
+                        callback.onUserProfileLoaded(null);
+                    });
+        }
+    }
+
+
+    public interface OnProfileUpdateListener {
+        void onUpdateSuccess();
+        void onUpdateFailure(Exception e);
+    }
+
+    public void updateUserProfile(HelperClass profileData, OnProfileUpdateListener listener) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            db.collection("users").document(user.getUid())
+                    .set(profileData, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "updateUserProfile: Update successful");
+                        listener.onUpdateSuccess();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "updateUserProfile: Failed to update", e);
+                        listener.onUpdateFailure(e);
+                    });
+        } else {
+            listener.onUpdateFailure(new Exception("No user signed in"));
+        }
+    }
+
+
+    public boolean isEmailVerified() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        return user != null && user.isEmailVerified();
+    }
+
 
 }
