@@ -165,8 +165,6 @@ public class EditProfileActivity extends AppCompatActivity {
             finish();
         } else if (itemID == R.id.nav_prof) {
             startActivity(new Intent(getIntent()));
-        } else if (itemID == R.id.nav_comment) {
-            startActivity(new Intent(EditProfileActivity.this, CommentActivity.class));
         } else if (itemID == R.id.nav_logout) {
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(EditProfileActivity.this, tutor_home.class);

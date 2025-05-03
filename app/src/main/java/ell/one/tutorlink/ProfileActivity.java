@@ -156,8 +156,6 @@ public class ProfileActivity extends AppCompatActivity {
         } else if (itemID == R.id.nav_password) {
             Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
-        } else if (itemID == R.id.nav_comment) {
-            startActivity(new Intent(ProfileActivity.this, CommentActivity.class));
         } else if (itemID == R.id.nav_logout) {
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);

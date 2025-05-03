@@ -1,12 +1,18 @@
 package ell.one.tutorlink;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,94 +23,103 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import ell.one.tutorlink.data_adapters.BookingAdapter;
+import ell.one.tutorlink.models.BookingModel;
 
 public class activity_tutee_bookings extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
-    private ListView bookingsListView;
-    private List<String> bookingDetails = new ArrayList<>();
-    private List<DocumentSnapshot> bookingDocs = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
+    private RecyclerView recyclerView;
+    private BookingAdapter adapter;
+    private List<BookingModel> bookings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tutee_bookings);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        bookingsListView = findViewById(R.id.tuteeBookingsListView);
+        recyclerView = findViewById(R.id.tuteeBookingsRecycler);
+        Button btnBackToHome = findViewById(R.id.btnBackToHome);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new BookingAdapter(bookings, this::cancelBooking);
+        recyclerView.setAdapter(adapter);
+
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, bookingDetails);
-        bookingsListView.setAdapter(adapter);
+        loadBookings();
 
-        loadTuteeBookings();
-
-        bookingsListView.setOnItemClickListener((parent, view, position, id) -> {
-            DocumentSnapshot bookingDoc = bookingDocs.get(position);
-            cancelBooking(bookingDoc);
+        btnBackToHome.setOnClickListener(v -> {
+            startActivity(new Intent(this, tutee_home.class));
+            finish();
         });
     }
 
-    private void loadTuteeBookings() {
+    private void loadBookings() {
         if (currentUser == null) return;
 
         db.collection("bookings")
                 .whereEqualTo("tuteeId", currentUser.getUid())
                 .get()
                 .addOnSuccessListener(query -> {
-                    bookingDetails.clear();
-                    bookingDocs.clear();
-                    for (DocumentSnapshot doc : query) {
-                        String tutorId = doc.getString("tutorId");
-                        String date = doc.getString("date");
-                        String start = doc.getString("startTime");
-                        String end = doc.getString("endTime");
-                        String status = doc.getString("status");
+                    bookings.clear();
+                    for (QueryDocumentSnapshot bookingDoc : query) {
+                        String tutorId = bookingDoc.getString("tutorId");
+                        String date = bookingDoc.getString("date");
+                        String startTime = bookingDoc.getString("startTime");
+                        String endTime = bookingDoc.getString("endTime");
+                        String status = bookingDoc.getString("status");
 
-                        bookingDetails.add("Tutor ID: " + tutorId + "\n" + date + " - " + start + " to " + end + "\nStatus: " + status);
-                        bookingDocs.add(doc);
+                        if (tutorId != null) {
+                            db.collection("users").document(tutorId).get()
+                                    .addOnSuccessListener(tutorDoc -> {
+                                        String tutorName = tutorDoc.getString("name");
+
+                                        bookings.add(new BookingModel(
+                                                bookingDoc.getId(),
+                                                tutorId,
+                                                tutorName,
+                                                date,
+                                                startTime,
+                                                endTime,
+                                                status
+                                        ));
+                                        adapter.notifyDataSetChanged();
+                                    });
+                        }
                     }
-                    adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Bookings", "Error loading", e);
-                    Toast.makeText(this, "Failed to load bookings", Toast.LENGTH_SHORT).show();
+                    Log.e("Bookings", "Failed to load bookings", e);
+                    Toast.makeText(this, "Error loading bookings", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    private void cancelBooking(DocumentSnapshot bookingDoc) {
-        String docId = bookingDoc.getId();
-        String tutorId = bookingDoc.getString("tutorId");
-        String date = bookingDoc.getString("date");
-
-        db.collection("bookings").document(docId).delete()
+    private void cancelBooking(BookingModel booking) {
+        db.collection("bookings").document(booking.getBookingId()).delete()
                 .addOnSuccessListener(unused -> {
-                    // Restore availability
+                    // Restore the availability slot using a unique ID
                     Map<String, Object> restoredSlot = new HashMap<>();
-                    restoredSlot.put("date", bookingDoc.getString("date"));
-                    restoredSlot.put("startTime", bookingDoc.getString("startTime"));
-                    restoredSlot.put("endTime", bookingDoc.getString("endTime"));
+                    restoredSlot.put("date", booking.getDate());
+                    restoredSlot.put("startTime", booking.getStartTime());
+                    restoredSlot.put("endTime", booking.getEndTime());
                     restoredSlot.put("timestamp", FieldValue.serverTimestamp());
 
-                    db.collection("users").document(tutorId)
-                            .collection("availability").document(date)
-                            .set(restoredSlot)
+                    db.collection("users").document(booking.getTutorId())
+                            .collection("availability")
+                            .add(restoredSlot)
                             .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(this, "Booking cancelled and slot restored", Toast.LENGTH_SHORT).show();
-                                loadTuteeBookings();
+                                Toast.makeText(this, "Booking cancelled & slot restored", Toast.LENGTH_SHORT).show();
+                                loadBookings();
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, "Cancelled but failed to restore slot", Toast.LENGTH_SHORT).show());
                 })

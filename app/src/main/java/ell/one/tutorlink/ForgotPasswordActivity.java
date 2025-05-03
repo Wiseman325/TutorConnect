@@ -94,9 +94,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         } else if (itemID == R.id.nav_password) {
             Intent intent = new Intent(ForgotPasswordActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
-        } else if (itemID == R.id.nav_comment) {
-            Intent intent = new Intent(ForgotPasswordActivity.this, CommentActivity.class);
-            startActivity(intent);
         } else if (itemID == R.id.nav_logout) {
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(ForgotPasswordActivity.this, tutor_home.class);
