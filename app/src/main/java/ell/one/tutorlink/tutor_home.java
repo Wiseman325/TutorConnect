@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class tutor_home extends AppCompatActivity {
 
     private TextView ewalletBalance;
-    private Button btnEditProfile, btnSetAvailability, btnSessionRequests, btnMyResources, btnLogout;
+    private Button btnEditProfile, btnSetAvailability, btnSessionRequests, btnMyResources, btnLogout, btnScheduleSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class tutor_home extends AppCompatActivity {
         btnEditProfile = findViewById(R.id.btnEditProfile);
         btnSetAvailability = findViewById(R.id.btnSetAvailability);
         btnSessionRequests = findViewById(R.id.btnSessionRequests);
+        btnScheduleSession = findViewById(R.id.btnScheduleSession);
         btnMyResources = findViewById(R.id.btnMyResources);
         btnLogout = findViewById(R.id.btnLogout);
 
@@ -51,6 +52,13 @@ public class tutor_home extends AppCompatActivity {
             // TODO: Replace with AvailabilityActivity
             Toast.makeText(this, "Set Availability clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(tutor_home.this, set_availability.class));
+
+        });
+
+        btnScheduleSession.setOnClickListener(v -> {
+            // TODO: Replace with AvailabilityActivity
+            Toast.makeText(this, "View Schedule clicked", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(tutor_home.this, ViewScheduleActivity.class));
 
         });
 
