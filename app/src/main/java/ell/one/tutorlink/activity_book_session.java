@@ -43,14 +43,10 @@ public class activity_book_session extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize Firebase
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Bind view
         timeSlotListView = findViewById(R.id.timeSlotListView);
 
-        // Get tutorId from intent
         tutorId = getIntent().getStringExtra("tutorId");
         if (tutorId == null || tutorId.trim().isEmpty()) {
             Toast.makeText(this, "Tutor ID not found.", Toast.LENGTH_SHORT).show();
@@ -58,10 +54,8 @@ public class activity_book_session extends AppCompatActivity {
             return;
         }
 
-        // Load available time slots for that tutor
         loadAvailableSlots();
 
-        // Handle booking when a time slot is selected
         timeSlotListView.setOnItemClickListener((parent, view, position, id) -> {
             DocumentSnapshot selectedDoc = slotDocuments.get(position);
             bookSession(selectedDoc);
@@ -107,6 +101,7 @@ public class activity_book_session extends AppCompatActivity {
         String date = slotDoc.getString("date");
         String start = slotDoc.getString("startTime");
         String end = slotDoc.getString("endTime");
+        String docId = slotDoc.getId();
 
         Map<String, Object> booking = new HashMap<>();
         booking.put("tuteeId", currentUser.getUid());
@@ -119,8 +114,17 @@ public class activity_book_session extends AppCompatActivity {
         db.collection("bookings")
                 .add(booking)
                 .addOnSuccessListener(docRef -> {
-                    Toast.makeText(this, "Session booked successfully!", Toast.LENGTH_SHORT).show();
-                    finish(); // Optionally close screen after booking
+                    // Delete the availability slot after booking
+                    db.collection("users").document(tutorId)
+                            .collection("availability").document(docId)
+                            .delete()
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(this, "Session booked successfully!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Booked, but failed to remove availability.", Toast.LENGTH_SHORT).show();
+                            });
                 })
                 .addOnFailureListener(e -> {
                     Log.e("BookSession", "Booking failed", e);

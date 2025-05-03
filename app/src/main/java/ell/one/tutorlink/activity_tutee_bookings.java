@@ -74,28 +74,36 @@ public class activity_tutee_bookings extends AppCompatActivity {
                     bookings.clear();
                     for (QueryDocumentSnapshot bookingDoc : query) {
                         String tutorId = bookingDoc.getString("tutorId");
+                        String tuteeId = bookingDoc.getString("tuteeId");
                         String date = bookingDoc.getString("date");
                         String startTime = bookingDoc.getString("startTime");
                         String endTime = bookingDoc.getString("endTime");
                         String status = bookingDoc.getString("status");
 
-                        if (tutorId != null) {
-                            db.collection("users").document(tutorId).get()
-                                    .addOnSuccessListener(tutorDoc -> {
-                                        String tutorName = tutorDoc.getString("name");
+                        if (tutorId == null || tuteeId == null) continue;
 
-                                        bookings.add(new BookingModel(
-                                                bookingDoc.getId(),
-                                                tutorId,
-                                                tutorName,
-                                                date,
-                                                startTime,
-                                                endTime,
-                                                status
-                                        ));
-                                        adapter.notifyDataSetChanged();
-                                    });
-                        }
+                        // Fetch both tutor and tutee names from users collection
+                        db.collection("users").document(tutorId).get().addOnSuccessListener(tutorDoc -> {
+                            String tutorName = tutorDoc.getString("name");
+
+                            db.collection("users").document(tuteeId).get().addOnSuccessListener(tuteeDoc -> {
+                                String tuteeName = tuteeDoc.getString("name");
+
+                                bookings.add(new BookingModel(
+                                        bookingDoc.getId(),
+                                        tutorId,
+                                        tutorName != null ? tutorName : "Tutor",
+                                        tuteeId,
+                                        tuteeName != null ? tuteeName : "You",
+                                        date,
+                                        startTime,
+                                        endTime,
+                                        status
+                                ));
+                                adapter.notifyDataSetChanged();
+                            });
+
+                        });
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -107,7 +115,7 @@ public class activity_tutee_bookings extends AppCompatActivity {
     private void cancelBooking(BookingModel booking) {
         db.collection("bookings").document(booking.getBookingId()).delete()
                 .addOnSuccessListener(unused -> {
-                    // Restore the availability slot using a unique ID
+                    // Restore the availability slot
                     Map<String, Object> restoredSlot = new HashMap<>();
                     restoredSlot.put("date", booking.getDate());
                     restoredSlot.put("startTime", booking.getStartTime());

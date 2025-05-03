@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,7 +10,7 @@
     android:background="#F5F5F5"
     android:padding="30dp">
 
-        <!-- Welcome Message -->
+    <!-- Welcome Message -->
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="0dp"
@@ -22,57 +23,58 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- E-Wallet Balance Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ewalletCard"
-            android:layout_width="0dp"
+    <!-- E-Wallet Balance Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ewalletCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:elevation="4dp"
+        android:padding="16dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintTop_toBottomOf="@id/welcomeText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/ewalletBalance"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:elevation="4dp"
-            android:padding="16dp"
-            app:cardCornerRadius="12dp"
-            app:layout_constraintTop_toBottomOf="@id/welcomeText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:text="E-Wallet Balance: R 0.00"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/ewalletBalance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="E-Wallet Balance: R 0.00"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </androidx.cardview.widget.CardView>
+    <!-- Profile Management -->
+    <Button
+        android:id="@+id/btnEditProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Manage Profile"
+        android:textStyle="bold"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#ffffff"
+        app:layout_constraintTop_toBottomOf="@id/ewalletCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Profile Management -->
-        <Button
-            android:id="@+id/btnEditProfile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Manage Profile"
-            android:textStyle="bold"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#ffffff"
-            app:layout_constraintTop_toBottomOf="@id/ewalletCard"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- Set Availability -->
+    <Button
+        android:id="@+id/btnSetAvailability"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Set Availability"
+        android:textStyle="bold"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#ffffff"
+        app:layout_constraintTop_toBottomOf="@id/btnEditProfile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Set Availability -->
-        <Button
-            android:id="@+id/btnSetAvailability"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Set Availability"
-            android:textStyle="bold"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#ffffff"
-            app:layout_constraintTop_toBottomOf="@id/btnEditProfile"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
+    <!-- My Schedule -->
     <Button
         android:id="@+id/btnScheduleSession"
         android:layout_width="0dp"
@@ -86,47 +88,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- View Session Requests -->
-        <Button
-            android:id="@+id/btnSessionRequests"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="View Session Requests"
-            android:textStyle="bold"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#ffffff"
-            app:layout_constraintTop_toBottomOf="@id/btnScheduleSession"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <!-- View Session Requests -->
+    <Button
+        android:id="@+id/btnSessionRequests"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="View Session Requests"
+        android:textStyle="bold"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#ffffff"
+        app:layout_constraintTop_toBottomOf="@id/btnScheduleSession"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- View Uploaded Resources -->
-        <Button
-            android:id="@+id/btnMyResources"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Uploaded Notes and  Resources"
-            android:textStyle="bold"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#ffffff"
-            app:layout_constraintTop_toBottomOf="@id/btnSessionRequests"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <!-- View Booked Sessions (NEW) -->
+    <Button
+        android:id="@+id/btnViewBookedSessions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Booked Sessions"
+        android:textStyle="bold"
+        android:backgroundTint="#43A047"
+        android:textColor="#ffffff"
+        app:layout_constraintTop_toBottomOf="@id/btnSessionRequests"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Logout Button -->
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Logout"
-            android:backgroundTint="#D32F2F"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/btnMyResources"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- View Uploaded Resources -->
+    <Button
+        android:id="@+id/btnMyResources"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Uploaded Notes and Resources"
+        android:textStyle="bold"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#ffffff"
+        app:layout_constraintTop_toBottomOf="@id/btnViewBookedSessions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-
+    <!-- Logout -->
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Logout"
+        android:backgroundTint="#D32F2F"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/btnMyResources"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

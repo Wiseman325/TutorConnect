@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class tutor_home extends AppCompatActivity {
 
     private TextView ewalletBalance;
-    private Button btnEditProfile, btnSetAvailability, btnSessionRequests, btnMyResources, btnLogout, btnScheduleSession;
+    private Button btnEditProfile, btnSetAvailability, btnSessionRequests, btnMyResources, btnLogout, btnScheduleSession, btnViewBookedSessions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,11 @@ public class tutor_home extends AppCompatActivity {
         btnScheduleSession = findViewById(R.id.btnScheduleSession);
         btnMyResources = findViewById(R.id.btnMyResources);
         btnLogout = findViewById(R.id.btnLogout);
+        btnViewBookedSessions = findViewById(R.id.btnViewBookedSessions);
+
+        btnViewBookedSessions.setOnClickListener(v -> {
+            startActivity(new Intent(tutor_home.this, TutorBookings.class));
+        });
 
         // TODO: Later - fetch balance from Firestore
         ewalletBalance.setText("E-Wallet Balance: R 0.00");

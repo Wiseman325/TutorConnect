@@ -40,7 +40,15 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         BookingModel booking = bookings.get(position);
 
-        holder.tutorName.setText("Tutor: " + booking.getTutorName());
+        // Display name conditionally
+        if (booking.getTutorName() != null) {
+            holder.name.setText("Tutor: " + booking.getTutorName());
+        } else if (booking.getTuteeName() != null) {
+            holder.name.setText("Tutee: " + booking.getTuteeName());
+        } else {
+            holder.name.setText("User: Unknown");
+        }
+
         holder.slot.setText("Date: " + booking.getDate() + "\nTime: " + booking.getStartTime() + " - " + booking.getEndTime());
         holder.status.setText("Status: " + booking.getStatus());
 
@@ -57,12 +65,12 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     }
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
-        TextView tutorName, slot, status;
+        TextView name, slot, status;
         Button cancelButton;
 
         public BookingViewHolder(@NonNull View itemView) {
             super(itemView);
-            tutorName = itemView.findViewById(R.id.bookingTutorName);
+            name = itemView.findViewById(R.id.bookingTutorName);
             slot = itemView.findViewById(R.id.bookingSlot);
             status = itemView.findViewById(R.id.bookingStatus);
             cancelButton = itemView.findViewById(R.id.cancelBookingBtn);
