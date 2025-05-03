@@ -28,6 +28,13 @@ public class tutee_home extends AppCompatActivity {
         btnChatbot = findViewById(R.id.btnChatbot);
         btnLogout = findViewById(R.id.btnLogout);
 
+        Button btnMyBookings = findViewById(R.id.btnMyBookings);
+        btnMyBookings.setOnClickListener(v -> {
+            Intent intent = new Intent(tutee_home.this, activity_tutee_bookings.class);
+            startActivity(intent);
+        });
+
+
         btnSearchTutors.setOnClickListener(v -> {
             startActivity(new Intent(tutee_home.this, activity_search_tutors.class));
         });

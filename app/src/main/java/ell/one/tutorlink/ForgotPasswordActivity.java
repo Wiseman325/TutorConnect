@@ -57,7 +57,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     Toast.makeText(ForgotPasswordActivity.this, "Email sent", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(ForgotPasswordActivity.this, MainActivity.class)
+                    startActivity(new Intent(ForgotPasswordActivity.this, tutor_home.class)
                             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                     Intent.FLAG_ACTIVITY_NEW_TASK));
                     finish();
@@ -80,7 +80,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         int itemID = item.getItemId();
 
         if (itemID == R.id.nav_home){
-            Intent intent = new Intent(ForgotPasswordActivity.this, MainActivity.class);
+            Intent intent = new Intent(ForgotPasswordActivity.this, tutor_home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -91,9 +91,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
-        } else if (itemID == R.id.nav_history) {
-            Intent intent = new Intent(ForgotPasswordActivity.this, HistoryActivity.class);
-            startActivity(intent);
         } else if (itemID == R.id.nav_password) {
             Intent intent = new Intent(ForgotPasswordActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
@@ -102,7 +99,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             startActivity(intent);
         } else if (itemID == R.id.nav_logout) {
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(ForgotPasswordActivity.this, MainActivity.class);
+            Intent intent = new Intent(ForgotPasswordActivity.this, tutor_home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);

@@ -16,11 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
@@ -69,12 +64,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        bookAppointment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), AppointmentActivity.class));
-            }
-        });
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,16 +146,13 @@ public class ProfileActivity extends AppCompatActivity {
         int itemID = item.getItemId();
 
         if (itemID == R.id.nav_home){
-            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, tutor_home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         } else if (itemID == R.id.nav_prof) {
             startActivity(new Intent(getIntent()));
-        } else if (itemID == R.id.nav_history) {
-            Intent intent = new Intent(ProfileActivity.this, HistoryActivity.class);
-            startActivity(intent);
         } else if (itemID == R.id.nav_password) {
             Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
             startActivity(intent);

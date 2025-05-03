@@ -1,4 +1,4 @@
-package ell.one.tutorlink.models;
+package ell.one.tutorlink;
 
 /**
  * Represents a Tutor's profile data including unique ID, name, specialization, hourly rate, and bio.

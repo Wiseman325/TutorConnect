@@ -159,7 +159,7 @@ public class EditProfileActivity extends AppCompatActivity {
         int itemID = item.getItemId();
 
         if (itemID == R.id.nav_home) {
-            Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+            Intent intent = new Intent(EditProfileActivity.this, tutor_home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
@@ -169,7 +169,7 @@ public class EditProfileActivity extends AppCompatActivity {
             startActivity(new Intent(EditProfileActivity.this, CommentActivity.class));
         } else if (itemID == R.id.nav_logout) {
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+            Intent intent = new Intent(EditProfileActivity.this, tutor_home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ell.one.tutorlink.data_adapters.TutorAdapter;
-import ell.one.tutorlink.models.TutorModel;
+import ell.one.tutorlink.TutorModel;
 
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
@@ -67,6 +67,7 @@ public class activity_search_tutors extends AppCompatActivity {
             intent.putExtra("bio", tutor.getBio());
             startActivity(intent);
         });
+
         tutorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         tutorRecyclerView.setAdapter(tutorAdapter);
 

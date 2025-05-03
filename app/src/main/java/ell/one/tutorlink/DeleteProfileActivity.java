@@ -157,7 +157,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
                     deleteUserAccountData();
                     firebaseAuth.signOut();
                     Toast.makeText(DeleteProfileActivity.this, "Profile has been deleted", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(DeleteProfileActivity.this, MainActivity.class));
+                    startActivity(new Intent(DeleteProfileActivity.this, tutor_home.class));
                     finish();
                 }else{
                     try{
