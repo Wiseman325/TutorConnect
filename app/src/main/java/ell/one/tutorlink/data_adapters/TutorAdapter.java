@@ -11,14 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ell.one.tutorlink.R;
-import ell.one.tutorlink.TutorModel;
+import ell.one.tutorlink.models.TutorModel;
 
 public class TutorAdapter extends RecyclerView.Adapter<TutorAdapter.TutorViewHolder> {
 
     private final List<TutorModel> tutorList;
+    private final OnTutorClickListener clickListener;
 
-    public TutorAdapter(List<TutorModel> tutorList) {
+    // Constructor now accepts a click listener
+    public TutorAdapter(List<TutorModel> tutorList, OnTutorClickListener clickListener) {
         this.tutorList = tutorList;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -36,6 +39,9 @@ public class TutorAdapter extends RecyclerView.Adapter<TutorAdapter.TutorViewHol
         holder.specializationText.setText("Specialization: " + tutor.getSpecialization());
         holder.rateText.setText("Rate: R " + tutor.getRate() + "/hr");
         holder.bioText.setText(tutor.getBio());
+
+        // Set click listener for the entire card/item
+        holder.itemView.setOnClickListener(v -> clickListener.onTutorClick(tutor));
     }
 
     @Override
@@ -53,5 +59,10 @@ public class TutorAdapter extends RecyclerView.Adapter<TutorAdapter.TutorViewHol
             rateText = itemView.findViewById(R.id.tutorRate);
             bioText = itemView.findViewById(R.id.tutorBio);
         }
+    }
+
+    // Custom interface to handle clicks
+    public interface OnTutorClickListener {
+        void onTutorClick(TutorModel tutor);
     }
 }

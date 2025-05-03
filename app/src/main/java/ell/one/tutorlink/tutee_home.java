@@ -1,105 +1,51 @@
 package ell.one.tutorlink;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ell.one.tutorlink.data_adapters.TutorAdapter;
+import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class tutee_home extends AppCompatActivity {
 
-    private Spinner specializationFilter;
-    private EditText priceFilter;
-    private Button searchButton;
-    private RecyclerView tutorRecyclerView;
-    private TutorAdapter tutorAdapter;
-    private List<TutorModel> tutorList;
-
-    private FirebaseFirestore db;
+    private Button btnSearchTutors, btnProfile, btnChatbot, btnLogout;
+    private FirebaseManager firebaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutee_home);
 
-        specializationFilter = findViewById(R.id.specializationSpinner);
-        priceFilter = findViewById(R.id.priceEditText);
-        searchButton = findViewById(R.id.searchButton);
-        tutorRecyclerView = findViewById(R.id.tutorRecyclerView);
+        firebaseManager = new FirebaseManager(this);
 
-        db = FirebaseFirestore.getInstance();
+        btnSearchTutors = findViewById(R.id.btnSearchTutors);
+        btnProfile = findViewById(R.id.btnProfile);
+        btnChatbot = findViewById(R.id.btnChatbot);
+        btnLogout = findViewById(R.id.btnLogout);
 
-        tutorList = new ArrayList<>();
-        tutorAdapter = new TutorAdapter(tutorList);
-        tutorRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        tutorRecyclerView.setAdapter(tutorAdapter);
-
-        ArrayAdapter<CharSequence> specializationAdapter = ArrayAdapter.createFromResource(
-                this, R.array.specializations_array, android.R.layout.simple_spinner_item);
-        specializationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        specializationFilter.setAdapter(specializationAdapter);
-
-        loadTutors(null, null); // Load all initially
-
-        searchButton.setOnClickListener(v -> {
-            String selectedSpec = specializationFilter.getSelectedItem().toString();
-            String maxPriceStr = priceFilter.getText().toString().trim();
-            Double maxPrice = null;
-
-            if (!TextUtils.isEmpty(maxPriceStr)) {
-                try {
-                    maxPrice = Double.parseDouble(maxPriceStr);
-                } catch (NumberFormatException ignored) {}
-            }
-
-            loadTutors(selectedSpec.equals("All") ? null : selectedSpec, maxPrice);
+        btnSearchTutors.setOnClickListener(v -> {
+            startActivity(new Intent(tutee_home.this, activity_search_tutors.class));
         });
-    }
 
-    private void loadTutors(String specialization, Double maxPrice) {
-        db.collection("users")
-                .whereEqualTo("role", "tutor")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        tutorList.clear();
-                        for (QueryDocumentSnapshot doc : task.getResult()) {
-                            String name = doc.getString("name");
-                            String bio = doc.getString("bio");
-                            String spec = doc.getString("specialization");
-                            String rateStr = doc.getString("rate");
+        btnProfile.setOnClickListener(v -> {
+            startActivity(new Intent(tutee_home.this, ProfileActivity.class));
+        });
 
-                            if (name != null && spec != null && rateStr != null) {
-                                double rate;
-                                try {
-                                    rate = Double.parseDouble(rateStr);
-                                } catch (NumberFormatException e) {
-                                    continue;
-                                }
+        btnChatbot.setOnClickListener(v -> {
+            Toast.makeText(this, "Chatbot coming soon...", Toast.LENGTH_SHORT).show();
+        });
 
-                                boolean matchesSpec = specialization == null || spec.equalsIgnoreCase(specialization);
-                                boolean matchesRate = maxPrice == null || rate <= maxPrice;
-
-                                if (matchesSpec && matchesRate) {
-                                    tutorList.add(new TutorModel(name, spec, rateStr, bio));
-                                }
-                            }
-                        }
-                        tutorAdapter.notifyDataSetChanged();
-                    }
-                });
+        btnLogout.setOnClickListener(v -> {
+            firebaseManager.signOut();
+            Intent intent = new Intent(tutee_home.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 }
