@@ -65,4 +65,9 @@ public class BookingModel {
     public String getStatus() {
         return status;
     }
+
+    // Setter for status (needed for real-time local UI updates after tutor changes)
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

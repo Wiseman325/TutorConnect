@@ -50,7 +50,12 @@ public class activity_tutee_bookings extends AppCompatActivity {
         Button btnBackToHome = findViewById(R.id.btnBackToHome);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new BookingAdapter(bookings, this::cancelBooking);
+        adapter = new BookingAdapter(
+                bookings,
+                false, // isTutor = false
+                this::cancelBooking,
+                null // no status change listener for tutees
+        );
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
@@ -82,7 +87,6 @@ public class activity_tutee_bookings extends AppCompatActivity {
 
                         if (tutorId == null || tuteeId == null) continue;
 
-                        // Fetch both tutor and tutee names from users collection
                         db.collection("users").document(tutorId).get().addOnSuccessListener(tutorDoc -> {
                             String tutorName = tutorDoc.getString("name");
 
@@ -102,12 +106,11 @@ public class activity_tutee_bookings extends AppCompatActivity {
                                 ));
                                 adapter.notifyDataSetChanged();
                             });
-
                         });
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Bookings", "Failed to load bookings", e);
+                    Log.e("TuteeBookings", "Failed to load bookings", e);
                     Toast.makeText(this, "Error loading bookings", Toast.LENGTH_SHORT).show();
                 });
     }
@@ -115,7 +118,7 @@ public class activity_tutee_bookings extends AppCompatActivity {
     private void cancelBooking(BookingModel booking) {
         db.collection("bookings").document(booking.getBookingId()).delete()
                 .addOnSuccessListener(unused -> {
-                    // Restore the availability slot
+                    // Restore availability
                     Map<String, Object> restoredSlot = new HashMap<>();
                     restoredSlot.put("date", booking.getDate());
                     restoredSlot.put("startTime", booking.getStartTime());

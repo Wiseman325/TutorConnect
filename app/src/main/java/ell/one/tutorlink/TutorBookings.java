@@ -30,7 +30,7 @@ public class TutorBookings extends AppCompatActivity {
     private FirebaseUser currentUser;
     private RecyclerView recyclerView;
     private BookingAdapter adapter;
-    private List<BookingModel> bookings = new ArrayList<>();
+    private final List<BookingModel> bookings = new ArrayList<>();
     private Button btnBackToTutorHome;
 
     @Override
@@ -45,11 +45,19 @@ public class TutorBookings extends AppCompatActivity {
             return insets;
         });
 
+        // Bind UI
         recyclerView = findViewById(R.id.tutorBookingsRecycler);
         btnBackToTutorHome = findViewById(R.id.btnBackToTutorHome);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new BookingAdapter(bookings, null); // No cancel listener for tutors
+        // Setup adapter with status update callback
+        adapter = new BookingAdapter(
+                bookings,
+                true,
+                null,
+                this::updateBookingStatus
+        );
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
@@ -58,8 +66,7 @@ public class TutorBookings extends AppCompatActivity {
         loadTutorBookings();
 
         btnBackToTutorHome.setOnClickListener(v -> {
-            Intent intent = new Intent(TutorBookings.this, tutor_home.class);
-            startActivity(intent);
+            startActivity(new Intent(this, tutor_home.class));
             finish();
         });
     }
@@ -73,6 +80,7 @@ public class TutorBookings extends AppCompatActivity {
                 .addOnSuccessListener(query -> {
                     bookings.clear();
                     for (QueryDocumentSnapshot bookingDoc : query) {
+                        String bookingId = bookingDoc.getId();
                         String tuteeId = bookingDoc.getString("tuteeId");
                         String date = bookingDoc.getString("date");
                         String startTime = bookingDoc.getString("startTime");
@@ -83,11 +91,10 @@ public class TutorBookings extends AppCompatActivity {
                             db.collection("users").document(tuteeId).get()
                                     .addOnSuccessListener(tuteeDoc -> {
                                         String tuteeName = tuteeDoc.getString("name");
-
                                         bookings.add(new BookingModel(
-                                                bookingDoc.getId(),
+                                                bookingId,
                                                 currentUser.getUid(),
-                                                null, // tutorName not needed here
+                                                null,
                                                 tuteeId,
                                                 tuteeName != null ? tuteeName : "Tutee",
                                                 date,
@@ -103,6 +110,23 @@ public class TutorBookings extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.e("TutorBookings", "Error fetching bookings", e);
                     Toast.makeText(this, "Failed to load tutor bookings", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void updateBookingStatus(BookingModel booking, String newStatus) {
+        if (booking.getBookingId() == null) return;
+
+        db.collection("bookings")
+                .document(booking.getBookingId())
+                .update("status", newStatus)
+                .addOnSuccessListener(unused -> {
+                    booking.setStatus(newStatus);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(this, "Status updated to " + newStatus, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("TutorBookings", "Status update failed", e);
+                    Toast.makeText(this, "Failed to update status", Toast.LENGTH_SHORT).show();
                 });
     }
 }
