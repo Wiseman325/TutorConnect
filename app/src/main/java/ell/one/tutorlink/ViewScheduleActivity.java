@@ -31,7 +31,7 @@ public class ViewScheduleActivity extends AppCompatActivity {
         private FirebaseUser user;
         private List<Map<String, Object>> scheduleList = new ArrayList<>();
         private List<String> docKeys = new ArrayList<>();
-        private ell.one.tutorlink.adapters.AvailabilityAdapter adapter;
+        private ell.one.tutorlink.data_adapters.AvailabilityAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class ViewScheduleActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        adapter = new ell.one.tutorlink.adapters.AvailabilityAdapter(scheduleList, docKeys, this::deleteAvailability);
+        adapter = new ell.one.tutorlink.data_adapters.AvailabilityAdapter(scheduleList, docKeys, this::deleteAvailability);
         recyclerView.setAdapter(adapter);
 
         loadAvailability();

@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -257,6 +258,37 @@ public class FirebaseManager {
                     listener.onFailure(e);
                 });
     }
+
+
+    public interface OnAvailabilityFetchedListener {
+        void onSuccess(List<Map<String, Object>> availabilityList);
+        void onFailure(Exception e);
+    }
+
+    public void fetchTutorAvailability(OnAvailabilityFetchedListener listener) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            listener.onFailure(new Exception("User not authenticated"));
+            return;
+        }
+
+        db.collection("users")
+                .document(user.getUid())
+                .collection("availability")
+                .orderBy("timestamp")  // Optional: ordered by saved time
+                .get()
+                .addOnSuccessListener(querySnapshots -> {
+                    List<Map<String, Object>> result = new ArrayList<>();
+                    for (DocumentSnapshot doc : querySnapshots) {
+                        Map<String, Object> data = doc.getData();
+                        data.put("docId", doc.getId());  // Keep track of the document ID for deletion
+                        result.add(data);
+                    }
+                    listener.onSuccess(result);
+                })
+                .addOnFailureListener(listener::onFailure);
+    }
+
 
 
     public boolean isEmailVerified() {

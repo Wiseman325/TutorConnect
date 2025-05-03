@@ -1,0 +1,57 @@
+package ell.one.tutorlink.data_adapters;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import ell.one.tutorlink.R;
+import ell.one.tutorlink.TutorModel;
+
+public class TutorAdapter extends RecyclerView.Adapter<TutorAdapter.TutorViewHolder> {
+
+    private final List<TutorModel> tutorList;
+
+    public TutorAdapter(List<TutorModel> tutorList) {
+        this.tutorList = tutorList;
+    }
+
+    @NonNull
+    @Override
+    public TutorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_tutor, parent, false);
+        return new TutorViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull TutorViewHolder holder, int position) {
+        TutorModel tutor = tutorList.get(position);
+        holder.nameText.setText(tutor.getName());
+        holder.specializationText.setText("Specialization: " + tutor.getSpecialization());
+        holder.rateText.setText("Rate: R " + tutor.getRate() + "/hr");
+        holder.bioText.setText(tutor.getBio());
+    }
+
+    @Override
+    public int getItemCount() {
+        return tutorList.size();
+    }
+
+    public static class TutorViewHolder extends RecyclerView.ViewHolder {
+        TextView nameText, specializationText, rateText, bioText;
+
+        public TutorViewHolder(@NonNull View itemView) {
+            super(itemView);
+            nameText = itemView.findViewById(R.id.tutorName);
+            specializationText = itemView.findViewById(R.id.tutorSpecialization);
+            rateText = itemView.findViewById(R.id.tutorRate);
+            bioText = itemView.findViewById(R.id.tutorBio);
+        }
+    }
+}
