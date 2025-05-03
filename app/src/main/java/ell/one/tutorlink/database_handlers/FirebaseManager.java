@@ -219,34 +219,44 @@ public class FirebaseManager {
 
 
 
-    public void saveAvailabilityForDay(String day, List<String> timeSlots, AvailabilitySaveListener listener) {
+    public void saveAvailabilityForDay(String date, String startTime, String endTime, AvailabilitySaveListener listener) {
         FirebaseUser user = mAuth.getCurrentUser();
 
-        if (user != null) {
-            String userId = user.getUid();
-
-            Map<String, Object> daySchedule = new HashMap<>();
-            daySchedule.put("timeSlots", timeSlots);
-
-            db.collection("users")
-                    .document(userId)
-                    .collection("availability")
-                    .document(day)
-                    .set(daySchedule)
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, "Availability saved for " + day);
-                        listener.onSuccess();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to save availability for " + day, e);
-                        listener.onFailure(e);
-                    });
-        } else {
+        if (user == null) {
             listener.onFailure(new Exception("User not authenticated"));
+            return;
         }
+
+        String userId = user.getUid();
+
+        // Validate inputs (optional)
+        if (date == null || startTime == null || endTime == null || date.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
+            listener.onFailure(new IllegalArgumentException("Date, start time, or end time is missing"));
+            return;
+        }
+
+        // Create schedule map
+        Map<String, Object> schedule = new HashMap<>();
+        schedule.put("date", date);
+        schedule.put("startTime", startTime);
+        schedule.put("endTime", endTime);
+        schedule.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+
+        // Save to Firestore under availability subcollection
+        db.collection("users")
+                .document(userId)
+                .collection("availability")
+                .document(date)  // Date as document ID
+                .set(schedule)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Availability saved for " + date);
+                    listener.onSuccess();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to save availability for " + date, e);
+                    listener.onFailure(e);
+                });
     }
-
-
 
 
     public boolean isEmailVerified() {
