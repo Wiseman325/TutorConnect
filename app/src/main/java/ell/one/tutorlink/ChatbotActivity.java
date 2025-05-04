@@ -39,7 +39,7 @@ public class ChatbotActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private List<ChatMessage> chatList;
 
-    private final String OPENAI_API_KEY = "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";
+    private final String OPENAI_API_KEY = "";
     private final String OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
     private final OkHttpClient httpClient = new OkHttpClient();
 
