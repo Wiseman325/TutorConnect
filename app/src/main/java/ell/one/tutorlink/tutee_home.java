@@ -44,7 +44,8 @@ public class tutee_home extends AppCompatActivity {
         });
 
         btnChatbot.setOnClickListener(v -> {
-            Toast.makeText(this, "Chatbot coming soon...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(tutee_home.this, ChatbotActivity.class);
+            startActivity(intent);
         });
 
         btnLogout.setOnClickListener(v -> {
