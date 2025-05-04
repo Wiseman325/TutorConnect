@@ -32,7 +32,6 @@ public class IntroActivity extends AppCompatActivity {
         btn_getStarted.setOnClickListener(v -> {
             Intent intent = new Intent(IntroActivity.this, LoginActivity.class);
             startActivity(intent);
-            finish();
         });
     }
 }

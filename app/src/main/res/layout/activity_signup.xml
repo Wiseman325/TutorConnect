@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/disp5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,22 +21,28 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hi, \nCreate an \nAccount"
         android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
+        android:text="Hi, \nCreate an \nAccount"
+        android:textColor="#ffffff"
         android:textSize="30dp"
         android:textStyle="bold"
-        android:textColor="#ffffff"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_height="740dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:padding="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/disp1"
@@ -44,130 +50,137 @@
             android:layout_height="wrap_content"
             android:text="Full Name"
             android:textColor="#000000"
-            android:textStyle="bold"
             android:textSize="20sp"
-            android:layout_marginTop="12dp"
-            />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/fullname_singup"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="18sp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edittext_background"
+            android:ems="10"
+            android:hint="Big Smile"
+            android:inputType="textPersonName"
             android:padding="12dp"
             android:textColor="#707070"
-            android:layout_marginTop="2dp"
-            android:ems="10"
-            android:background="@drawable/edittext_background"
-            android:inputType="textPersonName"
-            android:hint="Big Smile" />
+            android:textSize="18sp" />
 
 
         <TextView
             android:id="@+id/disp2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:text="Email"
             android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/signup_email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="18sp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edittext_background"
+            android:ems="10"
+            android:hint="bigsmile@gmail.com"
+            android:inputType="textPersonName"
             android:padding="12dp"
             android:textColor="#707070"
-            android:layout_marginTop="2dp"
-            android:ems="10"
-            android:background="@drawable/edittext_background"
-            android:inputType="textPersonName"
-            android:hint="bigsmile@gmail.com" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/disp3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:text="Create Password"
             android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/signup_password"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="18sp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edittext_background"
+            android:ems="10"
+            android:hint="*******"
+            android:inputType="textPassword"
             android:padding="12dp"
             android:textColor="#707070"
-            android:layout_marginTop="2dp"
-            android:ems="10"
-            android:background="@drawable/edittext_background"
-            android:inputType="textPassword"
-            android:hint="*******" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/disp4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Confirm Password"
             android:layout_marginTop="15dp"
+            android:text="Confirm Password"
             android:textColor="#000000"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/signup_conf_pass"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:textSize="18sp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edittext_background"
+            android:ems="10"
+            android:hint="*******"
+            android:inputType="textPassword"
             android:padding="12dp"
             android:textColor="#707070"
-            android:layout_marginTop="2dp"
-            android:ems="10"
-            android:background="@drawable/edittext_background"
-            android:inputType="textPassword"
-            android:hint="*******" />
+            android:textSize="18sp" />
 
         <RadioGroup
             android:id="@+id/role_radio_group"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+
             <RadioButton
                 android:id="@+id/radio_tutor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tutor" />
+                android:padding="8dp"
+                android:text="Tutor"
+                android:textSize="16sp" />
+
             <RadioButton
                 android:id="@+id/radio_tutee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Student" />
+                android:padding="8dp"
+                android:text="Student"
+                android:textSize="16sp" />
         </RadioGroup>
 
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/signup_button"
+            style="@android:style/Widget.Button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_backbackground"
-            style="@android:style/Widget.Button"
+            android:text="Sign Up"
             android:textColor="#ffffff"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:text="Sign Up" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textViewLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:text="Already have an account? Log in"
             android:textColor="@color/green"
             android:textSize="16sp"

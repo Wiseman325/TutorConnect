@@ -44,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileEmail = findViewById(R.id.profileEmail);
         editProfile = findViewById(R.id.editButton);
         changePassword = findViewById(R.id.changePassword);
-        bookAppointment = findViewById(R.id.book_app_text);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();

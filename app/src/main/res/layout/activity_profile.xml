@@ -13,39 +13,6 @@
         tools:context=".ProfileActivity">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp">
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:id="@+id/profileImg"
-                android:src="@drawable/backg"/>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp">
-                <TextView
-                    android:id="@+id/book_app_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/book_appointment"
-                    android:layout_gravity="center"
-                    android:textColor="@color/green"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_alignParentEnd="true"/>
-            </RelativeLayout>
-            <LinearLayout
-                android:layout_width="50dp"
-                android:layout_marginEnd="35dp"
-                android:layout_height="50dp"
-                android:background="@drawable/baseline_chevron_right_24">
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
