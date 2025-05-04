@@ -150,7 +150,7 @@ public class ProfileActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+
         } else if (itemID == R.id.nav_prof) {
             startActivity(new Intent(getIntent()));
         } else if (itemID == R.id.nav_password) {
@@ -162,7 +162,7 @@ public class ProfileActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+
         }
         return super.onOptionsItemSelected(item);
     }

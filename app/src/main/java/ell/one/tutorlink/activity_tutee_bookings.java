@@ -65,7 +65,6 @@ public class activity_tutee_bookings extends AppCompatActivity {
 
         btnBackToHome.setOnClickListener(v -> {
             startActivity(new Intent(this, tutee_home.class));
-            finish();
         });
     }
 

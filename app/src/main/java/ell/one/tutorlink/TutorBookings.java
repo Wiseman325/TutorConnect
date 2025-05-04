@@ -67,7 +67,6 @@ public class TutorBookings extends AppCompatActivity {
 
         btnBackToTutorHome.setOnClickListener(v -> {
             startActivity(new Intent(this, tutor_home.class));
-            finish();
         });
     }
 

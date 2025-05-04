@@ -60,7 +60,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     startActivity(new Intent(ForgotPasswordActivity.this, tutor_home.class)
                             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                     Intent.FLAG_ACTIVITY_NEW_TASK));
-                    finish();
+
                 }
             }
         });
@@ -84,13 +84,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+
         } else if (itemID == R.id.nav_prof) {
             Intent intent = new Intent(ForgotPasswordActivity.this, ProfileActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+
         } else if (itemID == R.id.nav_password) {
             Intent intent = new Intent(ForgotPasswordActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
@@ -100,7 +100,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                     Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -45,7 +45,6 @@ public class SignupActivity extends AppCompatActivity {
         textViewLogin = findViewById(R.id.textViewLogin);
         textViewLogin.setOnClickListener(v -> {
             startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-            finish();
         });
 
         // Initialize Firebase

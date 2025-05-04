@@ -51,7 +51,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         if (firebaseUser == null){
             Toast.makeText(this, "Something went wrong!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(ChangePasswordActivity.this, ProfileActivity.class));
-            finish();
+
         }else {
             verifyUser(firebaseUser);
         }
@@ -131,7 +131,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Toast.makeText(ChangePasswordActivity.this, "Password changed!", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(ChangePasswordActivity.this, ProfileActivity.class));
-                        finish();
+
                     }else{
                         try{
                             throw task.getException();

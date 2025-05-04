@@ -61,7 +61,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
         if (firebaseUser == null){
             Toast.makeText(this, "Something went wrong!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(DeleteProfileActivity.this, ProfileActivity.class));
-            finish();
+
         }else {
             verifyUser(firebaseUser);
         }
@@ -133,7 +133,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 startActivity(new Intent(DeleteProfileActivity.this, ProfileActivity.class));
-                finish();
+
             }
         });
 //        create dialog box
@@ -158,7 +158,7 @@ public class DeleteProfileActivity extends AppCompatActivity {
                     firebaseAuth.signOut();
                     Toast.makeText(DeleteProfileActivity.this, "Profile has been deleted", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(DeleteProfileActivity.this, tutor_home.class));
-                    finish();
+
                 }else{
                     try{
                         throw task.getException();

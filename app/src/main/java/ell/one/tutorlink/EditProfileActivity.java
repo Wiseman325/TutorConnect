@@ -138,7 +138,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                finish();
+
             }
 
             @Override
@@ -162,7 +162,7 @@ public class EditProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(EditProfileActivity.this, tutor_home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+
         } else if (itemID == R.id.nav_prof) {
             startActivity(new Intent(getIntent()));
         } else if (itemID == R.id.nav_logout) {
@@ -170,7 +170,7 @@ public class EditProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(EditProfileActivity.this, tutor_home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
+
         }
         return super.onOptionsItemSelected(item);
     }

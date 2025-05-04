@@ -81,7 +81,6 @@ public class tutor_home extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(tutor_home.this, LoginActivity.class));
-            finish();
         });
     }
 }

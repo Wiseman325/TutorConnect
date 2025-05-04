@@ -50,7 +50,7 @@ public class activity_book_session extends AppCompatActivity {
         tutorId = getIntent().getStringExtra("tutorId");
         if (tutorId == null || tutorId.trim().isEmpty()) {
             Toast.makeText(this, "Tutor ID not found.", Toast.LENGTH_SHORT).show();
-            finish();
+
             return;
         }
 
@@ -120,7 +120,7 @@ public class activity_book_session extends AppCompatActivity {
                             .delete()
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, "Session booked successfully!", Toast.LENGTH_SHORT).show();
-                                finish();
+
                             })
                             .addOnFailureListener(e -> {
                                 Toast.makeText(this, "Booked, but failed to remove availability.", Toast.LENGTH_SHORT).show();
