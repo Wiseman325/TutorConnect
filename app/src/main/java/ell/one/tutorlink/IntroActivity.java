@@ -2,6 +2,7 @@ package ell.one.tutorlink;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,13 +14,13 @@ import androidx.core.view.WindowInsetsCompat;
 public class IntroActivity extends AppCompatActivity {
 
     // Buttons
-    TextView btn_getStarted;
+    ImageView btn_getStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_intro);
+        setContentView(R.layout.welcome);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.intro_screen), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

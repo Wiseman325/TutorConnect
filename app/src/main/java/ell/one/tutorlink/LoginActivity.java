@@ -2,6 +2,7 @@ package ell.one.tutorlink;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
@@ -23,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView textViewSignup;
 
     private EditText loginEmail, loginPassword;
-    private Button loginButton;
+    private ImageView loginButton;
 
     private FirebaseAuth mAuth;
     private FirebaseManager firebaseManager;
@@ -32,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.login_screen);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login_screen), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

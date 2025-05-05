@@ -3,6 +3,7 @@ package ell.one.tutorlink;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,13 +14,14 @@ import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class tutee_home extends AppCompatActivity {
 
-    private Button btnSearchTutors, btnProfile, btnChatbot, btnLogout;
+    private LinearLayout btnSearchTutors, btnProfile, btnChatbot, btnLogout;
     private FirebaseManager firebaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tutee_home);
+        setContentView(R.layout.student_dash);
+
 
         firebaseManager = new FirebaseManager(this);
 
@@ -28,7 +30,7 @@ public class tutee_home extends AppCompatActivity {
         btnChatbot = findViewById(R.id.btnChatbot);
         btnLogout = findViewById(R.id.btnLogout);
 
-        Button btnMyBookings = findViewById(R.id.btnMyBookings);
+        LinearLayout btnMyBookings = findViewById(R.id.btnMyBookings);
         btnMyBookings.setOnClickListener(v -> {
             Intent intent = new Intent(tutee_home.this, activity_tutee_bookings.class);
             startActivity(intent);

@@ -24,9 +24,9 @@ import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class SignupActivity extends AppCompatActivity {
     private EditText fullNameEditText, emailEditText, passwordEditText, confirmPasswordEditText;
-    private Button signupButton;
+    private ImageView signupButton;
     private ImageView topBackgroundImage;
-    private TextView greetingText, disp1, disp2, disp3, disp4, textViewLogin;
+    private TextView textViewLogin;
     private RadioGroup roleRadioGroup;
 
     private FirebaseAuth mAuth;
@@ -35,7 +35,7 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.signup_screen);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.signup_screen), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -59,12 +59,7 @@ public class SignupActivity extends AppCompatActivity {
         roleRadioGroup = findViewById(R.id.role_radio_group);
         signupButton = findViewById(R.id.signup_button);
 
-        topBackgroundImage = findViewById(R.id.disp5);
-        greetingText = findViewById(R.id.textView3);
-        disp1 = findViewById(R.id.disp1);
-        disp2 = findViewById(R.id.disp2);
-        disp3 = findViewById(R.id.disp3);
-        disp4 = findViewById(R.id.disp4);
+
 
         signupButton.setOnClickListener(v -> {
             String fullName = fullNameEditText.getText().toString().trim();
