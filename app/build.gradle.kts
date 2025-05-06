@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.androidApplication)
-    id("com.google.gms.google-services")
 }
 
 android {
@@ -44,11 +43,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.json:json:20231013")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("androidx.gridlayout:gridlayout:1.0.0")
+
+
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     testImplementation(libs.junit)
