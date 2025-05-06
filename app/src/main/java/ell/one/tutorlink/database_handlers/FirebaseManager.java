@@ -297,4 +297,26 @@ public class FirebaseManager {
     }
 
 
+    public void deleteUserProfile(String uid, OnDeleteListener listener) {
+        FirebaseFirestore.getInstance().collection("users")
+                .document(uid)
+                .delete()
+                .addOnSuccessListener(unused -> {
+                    if (listener != null) {
+                        listener.onDeleteSuccess();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (listener != null) {
+                        listener.onDeleteFailure(e);
+                    }
+                });
+    }
+
+    public interface OnDeleteListener {
+        void onDeleteSuccess();
+        void onDeleteFailure(Exception e);
+    }
+
+
 }

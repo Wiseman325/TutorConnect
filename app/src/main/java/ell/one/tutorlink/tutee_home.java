@@ -40,7 +40,7 @@ public class tutee_home extends AppCompatActivity {
         });
 
         btnProfile.setOnClickListener(v -> {
-            startActivity(new Intent(tutee_home.this, ProfileActivity.class));
+            startActivity(new Intent(tutee_home.this, EditProfileActivity.class));
         });
 
         btnChatbot.setOnClickListener(v -> {

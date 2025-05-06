@@ -25,7 +25,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText editName, editEmailText, editPhoneNo, editBio, editRate;
     Spinner specializationSpinner;
-    Button saveButton, cancelButton;
+    Button saveButton, deleteButton;
 
     FirebaseAuth firebaseAuth;
     FirebaseManager firebaseManager;
@@ -36,7 +36,6 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-
         // Bind views
         editName = findViewById(R.id.editName);
         editEmailText = findViewById(R.id.editEmail);
@@ -45,13 +44,13 @@ public class EditProfileActivity extends AppCompatActivity {
         specializationSpinner = findViewById(R.id.specializationSpinner);
         editRate = findViewById(R.id.editRate);
         saveButton = findViewById(R.id.saveButton);
-        cancelButton = findViewById(R.id.cancelButton);
+        deleteButton = findViewById(R.id.deleteButton);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseManager = new FirebaseManager(this);
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        // Set up spinner adapter
+        // Spinner setup
         specializationAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.specializations_array,
@@ -65,19 +64,18 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         saveButton.setOnClickListener(v -> updateUserProfile(firebaseUser));
-        cancelButton.setOnClickListener(v -> finish());
+        deleteButton.setOnClickListener(v -> deleteUser(firebaseUser));
     }
 
     private void showData() {
         firebaseManager.getUserProfile(profile -> {
             if (profile != null) {
                 editName.setText(profile.getName());
-                editEmailText.setText(firebaseAuth.getCurrentUser().getEmail()); // Auth email
+                editEmailText.setText(firebaseAuth.getCurrentUser().getEmail());
                 editPhoneNo.setText(profile.getPhoneNo());
                 editBio.setText(profile.getBio());
                 editRate.setText(profile.getRate());
 
-                // Set selected specialization in spinner
                 String currentSpecialization = profile.getSpecialization();
                 int position = specializationAdapter.getPosition(currentSpecialization);
                 if (position >= 0) {
@@ -97,7 +95,6 @@ public class EditProfileActivity extends AppCompatActivity {
         String specializationUser = specializationSpinner.getSelectedItem().toString();
         String rateUser = editRate.getText().toString().trim();
 
-        // Validation
         if (TextUtils.isEmpty(nameUser)) {
             editName.setError("Name is required");
             editName.requestFocus();
@@ -135,15 +132,38 @@ public class EditProfileActivity extends AppCompatActivity {
                 firebaseUser.updateProfile(userProfileChangeRequest);
 
                 Toast.makeText(EditProfileActivity.this, "Profile updated", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                startActivity(new Intent(EditProfileActivity.this, ProfileActivity.class));
                 finish();
             }
 
             @Override
             public void onUpdateFailure(Exception e) {
                 Toast.makeText(EditProfileActivity.this, "Could not update profile", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void deleteUser(FirebaseUser firebaseUser) {
+        String uid = firebaseUser.getUid();
+
+        firebaseManager.deleteUserProfile(uid, new FirebaseManager.OnDeleteListener() {
+            @Override
+            public void onDeleteSuccess() {
+                firebaseUser.delete().addOnSuccessListener(unused -> {
+                    firebaseAuth.signOut();
+                    Toast.makeText(EditProfileActivity.this, "Profile deleted", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(EditProfileActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }).addOnFailureListener(e -> {
+                    Toast.makeText(EditProfileActivity.this, "Failed to delete Firebase Auth user", Toast.LENGTH_LONG).show();
+                });
+            }
+
+            @Override
+            public void onDeleteFailure(Exception e) {
+                Toast.makeText(EditProfileActivity.this, "Failed to delete user profile", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -159,15 +179,14 @@ public class EditProfileActivity extends AppCompatActivity {
         int itemID = item.getItemId();
 
         if (itemID == R.id.nav_home) {
-            Intent intent = new Intent(EditProfileActivity.this, tutor_home.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            startActivity(new Intent(EditProfileActivity.this, tutor_home.class));
             finish();
         } else if (itemID == R.id.nav_prof) {
             startActivity(new Intent(getIntent()));
         } else if (itemID == R.id.nav_logout) {
+            firebaseAuth.signOut();
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(EditProfileActivity.this, tutor_home.class);
+            Intent intent = new Intent(EditProfileActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

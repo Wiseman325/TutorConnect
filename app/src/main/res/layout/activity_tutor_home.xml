@@ -23,7 +23,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- E-Wallet Balance Card -->
+    <!-- E-Wallet Balance Card (Empty) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/ewalletCard"
         android:layout_width="0dp"
@@ -36,14 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/ewalletBalance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="E-Wallet Balance: R 0.00"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <!-- Removed ewalletBalance TextView -->
     </androidx.cardview.widget.CardView>
 
     <!-- Profile Management -->
@@ -88,21 +81,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- View Session Requests -->
-    <Button
-        android:id="@+id/btnSessionRequests"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="View Session Requests"
-        android:textStyle="bold"
-        android:backgroundTint="#4CAF50"
-        android:textColor="#ffffff"
-        app:layout_constraintTop_toBottomOf="@id/btnScheduleSession"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- View Booked Sessions (NEW) -->
+    <!-- View Booked Sessions -->
     <Button
         android:id="@+id/btnViewBookedSessions"
         android:layout_width="0dp"
@@ -112,21 +91,7 @@
         android:textStyle="bold"
         android:backgroundTint="#43A047"
         android:textColor="#ffffff"
-        app:layout_constraintTop_toBottomOf="@id/btnSessionRequests"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- View Uploaded Resources -->
-    <Button
-        android:id="@+id/btnMyResources"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Uploaded Notes and Resources"
-        android:textStyle="bold"
-        android:backgroundTint="#4CAF50"
-        android:textColor="#ffffff"
-        app:layout_constraintTop_toBottomOf="@id/btnViewBookedSessions"
+        app:layout_constraintTop_toBottomOf="@id/btnScheduleSession"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -140,7 +105,8 @@
         android:backgroundTint="#D32F2F"
         android:textColor="#ffffff"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/btnMyResources"
+        app:layout_constraintTop_toBottomOf="@id/btnViewBookedSessions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
