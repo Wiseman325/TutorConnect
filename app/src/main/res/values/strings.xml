@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">TutorLink</string>
+    <string name="app_name">ClariX</string>
+    <string name="welcome_txt">
+    This is a space for smarter, peer-driven learning.\nWe’re glad to have you on this journey!
+    </string>
     <string name="verified">Verified!</string>
     <string name="scrollable_cards">Scrollable cards</string>
     <string name="appointments">Book appointment</string>

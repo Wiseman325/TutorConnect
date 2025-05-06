@@ -55,12 +55,12 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
-        <activity
-            android:name=".DetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HistoryActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".DetailActivity"-->
+<!--            android:exported="false" />-->
+<!--        <activity-->
+<!--            android:name=".HistoryActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" /> <!-- <activity -->
@@ -71,21 +71,21 @@
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
-        <activity
-            android:name=".CommentActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".CommentActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".AppointmentActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".AppointmentActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".MainActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".SignupActivity"
             android:exported="true" />
