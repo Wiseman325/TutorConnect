@@ -54,6 +54,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Meeting Link (shown only when status is Confirmed/Completed) -->
+        <TextView
+            android:id="@+id/meetingLinkText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Join Meeting"
+            android:textColor="@color/blue"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:autoLink="web"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintTop_toBottomOf="@id/bookingStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <!-- Cancel button (visible only for Tutee) -->
         <Button
             android:id="@+id/cancelBookingBtn"
@@ -65,7 +82,7 @@
             android:textStyle="bold"
             android:layout_marginTop="10dp"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/bookingStatus"
+            app:layout_constraintTop_toBottomOf="@id/meetingLinkText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -76,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/bookingStatus"
+            app:layout_constraintTop_toBottomOf="@id/meetingLinkText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

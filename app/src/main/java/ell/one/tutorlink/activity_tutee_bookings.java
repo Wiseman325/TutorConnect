@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import ell.one.tutorlink.data_adapters.BookingAdapter;
-import ell.one.tutorlink.models.BookingModel;
+import ell.one.tutorlink.BookingModel;
 
 public class activity_tutee_bookings extends AppCompatActivity {
 
@@ -84,6 +84,7 @@ public class activity_tutee_bookings extends AppCompatActivity {
                         String startTime = bookingDoc.getString("startTime");
                         String endTime = bookingDoc.getString("endTime");
                         String status = bookingDoc.getString("status");
+                        String meetingLink = bookingDoc.getString("meetingLink");
 
                         if (tutorId == null || tuteeId == null) continue;
 
@@ -102,7 +103,8 @@ public class activity_tutee_bookings extends AppCompatActivity {
                                         date,
                                         startTime,
                                         endTime,
-                                        status
+                                        status,
+                                        meetingLink
                                 ));
                                 adapter.notifyDataSetChanged();
                             });

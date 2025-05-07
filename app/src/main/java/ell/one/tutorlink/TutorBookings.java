@@ -19,10 +19,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ell.one.tutorlink.data_adapters.BookingAdapter;
-import ell.one.tutorlink.models.BookingModel;
+import ell.one.tutorlink.BookingModel;
 
 public class TutorBookings extends AppCompatActivity {
 
@@ -45,13 +47,10 @@ public class TutorBookings extends AppCompatActivity {
             return insets;
         });
 
-        // Bind UI
         recyclerView = findViewById(R.id.tutorBookingsRecycler);
         btnBackToTutorHome = findViewById(R.id.btnBackToTutorHome);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Setup adapter with status update callback
         adapter = new BookingAdapter(
                 bookings,
                 true,
@@ -86,6 +85,7 @@ public class TutorBookings extends AppCompatActivity {
                         String startTime = bookingDoc.getString("startTime");
                         String endTime = bookingDoc.getString("endTime");
                         String status = bookingDoc.getString("status");
+                        String meetingLink = bookingDoc.getString("meetingLink");
 
                         if (tuteeId != null) {
                             db.collection("users").document(tuteeId).get()
@@ -100,7 +100,8 @@ public class TutorBookings extends AppCompatActivity {
                                                 date,
                                                 startTime,
                                                 endTime,
-                                                status
+                                                status,
+                                                meetingLink
                                         ));
                                         adapter.notifyDataSetChanged();
                                     });
@@ -114,19 +115,52 @@ public class TutorBookings extends AppCompatActivity {
     }
 
     private void updateBookingStatus(BookingModel booking, String newStatus) {
-        if (booking.getBookingId() == null) return;
+        if (booking.getBookingId() == null || currentUser == null) return;
 
-        db.collection("bookings")
-                .document(booking.getBookingId())
-                .update("status", newStatus)
-                .addOnSuccessListener(unused -> {
-                    booking.setStatus(newStatus);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(this, "Status updated to " + newStatus, Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("TutorBookings", "Status update failed", e);
-                    Toast.makeText(this, "Failed to update status", Toast.LENGTH_SHORT).show();
-                });
+        if (!"Confirmed".equalsIgnoreCase(newStatus)) {
+            // Update status and remove meeting link
+            Map<String, Object> updateMap = new HashMap<>();
+            updateMap.put("status", newStatus);
+            updateMap.put("meetingLink", FieldValue.delete());
+
+            db.collection("bookings").document(booking.getBookingId())
+                    .update(updateMap)
+                    .addOnSuccessListener(unused -> {
+                        booking.setStatus(newStatus);
+                        booking.setMeetingLink(null);
+                        adapter.notifyDataSetChanged();
+//                        Toast.makeText(this, "Status updated to " + newStatus, Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("TutorBookings", "Status update failed", e);
+                        Toast.makeText(this, "Failed to update status", Toast.LENGTH_SHORT).show();
+                    });
+
+        } else {
+            // Use existing meeting link stored in the booking
+            String meetingLink = booking.getMeetingLink();
+
+            if (meetingLink == null || meetingLink.isEmpty()) {
+                Toast.makeText(this, "No meeting link available to confirm this booking.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Map<String, Object> updateMap = new HashMap<>();
+            updateMap.put("status", "Confirmed");
+            updateMap.put("meetingLink", meetingLink);
+
+            db.collection("bookings").document(booking.getBookingId())
+                    .update(updateMap)
+                    .addOnSuccessListener(unused -> {
+                        booking.setStatus("Confirmed");
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(this, "Booking confirmed", Toast.LENGTH_SHORT).show();
+                        loadTutorBookings();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("TutorBookings", "Error confirming booking", e);
+                        Toast.makeText(this, "Failed to confirm booking", Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 }

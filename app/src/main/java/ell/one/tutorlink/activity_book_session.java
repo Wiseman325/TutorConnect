@@ -1,5 +1,6 @@
 package ell.one.tutorlink;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -7,6 +8,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,12 +26,15 @@ import java.util.Map;
 
 public class activity_book_session extends AppCompatActivity {
 
+    private static final int PAYMENT_REQUEST_CODE = 101;
+
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private ListView timeSlotListView;
     private List<String> availableSlots = new ArrayList<>();
     private List<DocumentSnapshot> slotDocuments = new ArrayList<>();
     private String tutorId;
+    private DocumentSnapshot selectedSlotToBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +62,9 @@ public class activity_book_session extends AppCompatActivity {
         loadAvailableSlots();
 
         timeSlotListView.setOnItemClickListener((parent, view, position, id) -> {
-            DocumentSnapshot selectedDoc = slotDocuments.get(position);
-            bookSession(selectedDoc);
+            selectedSlotToBook = slotDocuments.get(position);
+            Intent intent = new Intent(activity_book_session.this, PaymentActivity.class);
+            startActivityForResult(intent, PAYMENT_REQUEST_CODE);
         });
     }
 
@@ -92,7 +98,23 @@ public class activity_book_session extends AppCompatActivity {
                 });
     }
 
-    private void bookSession(DocumentSnapshot slotDoc) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PAYMENT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            String paymentStatus = data.getStringExtra("paymentStatus");
+            if ("success".equals(paymentStatus)) {
+                bookSessionAfterPayment(selectedSlotToBook);
+            } else {
+                Toast.makeText(this, "Payment not completed", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Payment canceled or failed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void bookSessionAfterPayment(DocumentSnapshot slotDoc) {
         if (currentUser == null) {
             Toast.makeText(this, "Please log in to book", Toast.LENGTH_SHORT).show();
             return;
@@ -101,6 +123,7 @@ public class activity_book_session extends AppCompatActivity {
         String date = slotDoc.getString("date");
         String start = slotDoc.getString("startTime");
         String end = slotDoc.getString("endTime");
+        String meetingLink = slotDoc.getString("meetingLink");
         String docId = slotDoc.getId();
 
         Map<String, Object> booking = new HashMap<>();
@@ -110,16 +133,16 @@ public class activity_book_session extends AppCompatActivity {
         booking.put("startTime", start);
         booking.put("endTime", end);
         booking.put("status", "pending");
+        booking.put("meetingLink", meetingLink != null ? meetingLink : "");
 
         db.collection("bookings")
                 .add(booking)
                 .addOnSuccessListener(docRef -> {
-                    // Delete the availability slot after booking
                     db.collection("users").document(tutorId)
                             .collection("availability").document(docId)
                             .delete()
                             .addOnSuccessListener(unused -> {
-                                Toast.makeText(this, "Session booked successfully!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Session booked! Awaiting tutor confirmation.", Toast.LENGTH_SHORT).show();
                                 finish();
                             })
                             .addOnFailureListener(e -> {

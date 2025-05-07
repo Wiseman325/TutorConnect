@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -220,7 +221,9 @@ public class FirebaseManager {
 
 
 
-    public void saveAvailabilityForDay(String date, String startTime, String endTime, AvailabilitySaveListener listener) {
+
+
+    public void saveAvailabilityForDay(String date, String startTime, String endTime, String meetingLink, AvailabilitySaveListener listener) {
         FirebaseUser user = mAuth.getCurrentUser();
 
         if (user == null) {
@@ -230,31 +233,31 @@ public class FirebaseManager {
 
         String userId = user.getUid();
 
-        // Validate inputs (optional)
-        if (date == null || startTime == null || endTime == null || date.isEmpty() || startTime.isEmpty() || endTime.isEmpty()) {
-            listener.onFailure(new IllegalArgumentException("Date, start time, or end time is missing"));
+        if (date == null || startTime == null || endTime == null || meetingLink == null ||
+                date.isEmpty() || startTime.isEmpty() || endTime.isEmpty() || meetingLink.isEmpty()) {
+            listener.onFailure(new IllegalArgumentException("Required fields are missing"));
             return;
         }
 
-        // Create schedule map
+        // Build availability map
         Map<String, Object> schedule = new HashMap<>();
         schedule.put("date", date);
         schedule.put("startTime", startTime);
         schedule.put("endTime", endTime);
-        schedule.put("timestamp", com.google.firebase.firestore.FieldValue.serverTimestamp());
+        schedule.put("meetingLink", meetingLink);
+        schedule.put("timestamp", FieldValue.serverTimestamp());
 
-        // Save to Firestore under availability subcollection
+        // Save as a new document (not overwriting by date)
         db.collection("users")
                 .document(userId)
                 .collection("availability")
-                .document(date)  // Date as document ID
-                .set(schedule)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "Availability saved for " + date);
+                .add(schedule)
+                .addOnSuccessListener(docRef -> {
+                    Log.d(TAG, "Availability saved: " + docRef.getId());
                     listener.onSuccess();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Failed to save availability for " + date, e);
+                    Log.e(TAG, "Failed to save availability", e);
                     listener.onFailure(e);
                 });
     }

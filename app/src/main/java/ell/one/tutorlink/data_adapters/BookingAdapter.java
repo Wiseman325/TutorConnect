@@ -1,10 +1,15 @@
 package ell.one.tutorlink.data_adapters;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -14,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ell.one.tutorlink.R;
-import ell.one.tutorlink.models.BookingModel;
+import ell.one.tutorlink.BookingModel;
 
 public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingViewHolder> {
 
@@ -52,7 +57,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     public void onBindViewHolder(@NonNull BookingViewHolder holder, int position) {
         BookingModel booking = bookings.get(position);
 
-        // Display appropriate name label
+        // Set display values
         holder.name.setText(isTutor
                 ? "Tutee: " + booking.getTuteeName()
                 : "Tutor: " + booking.getTutorName());
@@ -62,7 +67,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
 
         holder.status.setText("Status: " + booking.getStatus());
 
-        // Show cancel button for Tutees only if status is still pending
+        // Cancel button (tutee only & pending)
         if (!isTutor && "pending".equalsIgnoreCase(booking.getStatus())) {
             holder.cancelButton.setVisibility(View.VISIBLE);
             holder.cancelButton.setOnClickListener(v -> {
@@ -72,19 +77,34 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             holder.cancelButton.setVisibility(View.GONE);
         }
 
-        // Show status dropdown for Tutors
+        // Show Meeting Link for Tutee only if status is Confirmed or Completed
+        if (!isTutor && booking.getMeetingLink() != null &&
+                (booking.getStatus().equalsIgnoreCase("Confirmed")
+                        || booking.getStatus().equalsIgnoreCase("Completed"))) {
+
+            holder.meetingLink.setVisibility(View.VISIBLE);
+            holder.meetingLink.setText("Join Meeting");
+            holder.meetingLink.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(booking.getMeetingLink()));
+                v.getContext().startActivity(intent);
+            });
+
+        } else {
+            holder.meetingLink.setVisibility(View.GONE);
+        }
+
+        // Tutor: Status change dropdown
         if (isTutor) {
             holder.statusDropdown.setVisibility(View.VISIBLE);
 
             ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                     holder.itemView.getContext(),
-                    R.array.booking_status_options, // Define in strings.xml
+                    R.array.booking_status_options,
                     android.R.layout.simple_spinner_item
             );
             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             holder.statusDropdown.setAdapter(spinnerAdapter);
 
-            // Set current selection based on status
             int selectedIndex = spinnerAdapter.getPosition(booking.getStatus());
             if (selectedIndex >= 0) {
                 holder.statusDropdown.setSelection(selectedIndex, false);
@@ -95,9 +115,42 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
                 public void onItemSelected(android.widget.AdapterView<?> parent, View view, int pos, long id) {
                     String selectedStatus = parent.getItemAtPosition(pos).toString();
                     if (!selectedStatus.equalsIgnoreCase(booking.getStatus())) {
-                        booking.setStatus(selectedStatus); // update model
-                        if (statusChangeListener != null) {
-                            statusChangeListener.onStatusChange(booking, selectedStatus);
+
+                        if (selectedStatus.equalsIgnoreCase("Confirmed")) {
+                            // Prompt for meeting link
+                            AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
+                            builder.setTitle("Enter Meeting Link");
+
+                            final EditText input = new EditText(holder.itemView.getContext());
+                            input.setHint("https://meet.google.com/...");
+                            input.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+                            builder.setView(input);
+
+                            builder.setPositiveButton("Save", (dialog, which) -> {
+                                String link = input.getText().toString().trim();
+                                booking.setStatus("Confirmed");
+                                booking.setMeetingLink(link);
+
+                                if (statusChangeListener != null) {
+                                    statusChangeListener.onStatusChange(booking, "Confirmed");
+                                }
+                                notifyItemChanged(holder.getAdapterPosition());
+                            });
+
+                            builder.setNegativeButton("Cancel", (dialog, which) -> {
+                                dialog.cancel();
+                                int prevIndex = spinnerAdapter.getPosition(booking.getStatus());
+                                holder.statusDropdown.setSelection(prevIndex, false);
+                            });
+
+                            builder.show();
+                        } else {
+                            booking.setStatus(selectedStatus);
+                            booking.setMeetingLink(null);
+                            if (statusChangeListener != null) {
+                                statusChangeListener.onStatusChange(booking, selectedStatus);
+                            }
+                            notifyItemChanged(holder.getAdapterPosition());
                         }
                     }
                 }
@@ -116,7 +169,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
     }
 
     public static class BookingViewHolder extends RecyclerView.ViewHolder {
-        TextView name, slot, status;
+        TextView name, slot, status, meetingLink;
         Button cancelButton;
         Spinner statusDropdown;
 
@@ -127,6 +180,7 @@ public class BookingAdapter extends RecyclerView.Adapter<BookingAdapter.BookingV
             status = itemView.findViewById(R.id.bookingStatus);
             cancelButton = itemView.findViewById(R.id.cancelBookingBtn);
             statusDropdown = itemView.findViewById(R.id.statusDropdown);
+            meetingLink = itemView.findViewById(R.id.meetingLinkText);
         }
     }
 }

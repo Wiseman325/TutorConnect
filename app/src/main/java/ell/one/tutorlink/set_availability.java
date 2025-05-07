@@ -4,8 +4,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,25 +13,25 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class set_availability extends AppCompatActivity {
 
     private Button btnPickDate, btnPickStartTime, btnPickEndTime, btnSubmit;
+    private EditText inputMeetingLink;
+
     private String selectedDate = null, startTime = null, endTime = null;
 
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
     private FirebaseManager firebaseManager;
 
     @Override
@@ -47,13 +47,13 @@ public class set_availability extends AppCompatActivity {
 
         firebaseManager = new FirebaseManager(this);
 
-        // Bind buttons
+        // Bind UI
         btnPickDate = findViewById(R.id.btnPickDate);
         btnPickStartTime = findViewById(R.id.btnPickStartTime);
         btnPickEndTime = findViewById(R.id.btnPickEndTime);
         btnSubmit = findViewById(R.id.btnSubmitSchedule);
+        inputMeetingLink = findViewById(R.id.inputMeetingLink);
 
-        // Event Listeners
         btnPickDate.setOnClickListener(v -> showDatePicker());
         btnPickStartTime.setOnClickListener(v -> showTimePicker(true));
         btnPickEndTime.setOnClickListener(v -> showTimePicker(false));
@@ -97,7 +97,13 @@ public class set_availability extends AppCompatActivity {
             return;
         }
 
-        // Time logic validation
+        String meetingLink = inputMeetingLink.getText().toString().trim();
+        if (meetingLink.isEmpty()) {
+            Toast.makeText(this, "Meeting link is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate time logic
         try {
             Date start = timeFormat.parse(startTime);
             Date end = timeFormat.parse(endTime);
@@ -112,27 +118,25 @@ public class set_availability extends AppCompatActivity {
             return;
         }
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Save using FirebaseManager
+        firebaseManager.saveAvailabilityForDay(
+                selectedDate,
+                startTime,
+                endTime,
+                meetingLink,
+                new FirebaseManager.AvailabilitySaveListener() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(set_availability.this, "Availability saved", Toast.LENGTH_SHORT).show();
+                        Log.d("Availability", "Slot saved successfully");
+                    }
 
-        String userId = user.getUid();
-        String dateKey = selectedDate.replace("/", "-"); // Firestore-safe key
-
-        firebaseManager.saveAvailabilityForDay(dateKey, startTime, endTime, new FirebaseManager.AvailabilitySaveListener() {
-            @Override
-            public void onSuccess() {
-                Log.d("Availability", "Saved for " + selectedDate);
-                Toast.makeText(set_availability.this, "Availability saved", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.e("Availability", "Failed to save", e);
-                Toast.makeText(set_availability.this, "Error saving availability", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(set_availability.this, "Error saving availability", Toast.LENGTH_SHORT).show();
+                        Log.e("Availability", "Failed to save", e);
+                    }
+                }
+        );
     }
 }

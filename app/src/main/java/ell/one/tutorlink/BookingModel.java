@@ -1,4 +1,4 @@
-package ell.one.tutorlink.models;
+package ell.one.tutorlink;
 
 public class BookingModel {
     private String bookingId;
@@ -10,14 +10,16 @@ public class BookingModel {
     private String startTime;
     private String endTime;
     private String status;
+    private String meetingLink;
 
-    // Default constructor for Firebase
+    // Default constructor (required for Firebase)
     public BookingModel() {}
 
-    // Full parameterized constructor
+    // Full parameterized constructor (including meetingLink)
     public BookingModel(String bookingId, String tutorId, String tutorName,
                         String tuteeId, String tuteeName,
-                        String date, String startTime, String endTime, String status) {
+                        String date, String startTime, String endTime,
+                        String status, String meetingLink) {
         this.bookingId = bookingId;
         this.tutorId = tutorId;
         this.tutorName = tutorName;
@@ -27,6 +29,7 @@ public class BookingModel {
         this.startTime = startTime;
         this.endTime = endTime;
         this.status = status;
+        this.meetingLink = meetingLink;
     }
 
     // Getters
@@ -66,8 +69,16 @@ public class BookingModel {
         return status;
     }
 
-    // Setter for status (needed for real-time local UI updates after tutor changes)
+    public String getMeetingLink() {
+        return meetingLink;
+    }
+
+    // Setters (for local updates)
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setMeetingLink(String meetingLink) {
+        this.meetingLink = meetingLink;
     }
 }
