@@ -10,23 +10,20 @@
     android:padding="20dp"
     tools:context=".tutor_home">
 
-
-
-    <!-- Welcome Message -->
+    <!-- Welcome Text -->
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Welcome, Tutor!"
-        android:textColor="#2E7D32"
-        android:textSize="24sp"
+        android:textColor="#2E7D32"        android:textSize="24sp"
         android:textStyle="bold"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Wallet Balance Placeholder Card -->
+    <!-- Wallet Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/ewalletCard"
         android:layout_width="0dp"
@@ -65,64 +62,79 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Buttons -->
-    <LinearLayout
-        android:layout_width="0dp"
+    <!-- Centered 2x2 Button Grid -->
+    <GridLayout
+        android:id="@+id/buttonGrid"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:columnCount="2"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/ewalletCard"
+        app:layout_constraintBottom_toTopOf="@id/btnLogout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnEditProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:backgroundTint="#4CAF50"
+            android:layout_width="140dp"
+            android:layout_height="80dp"
             android:text="Manage Profile"
-            android:textColor="#ffffff"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_margin="8dp"
+            android:elevation="4dp"
+            android:background="@drawable/button_background"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSetAvailability"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="140dp"
+            android:layout_height="80dp"
             android:text="Set Availability"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="12dp"/>
+            android:layout_margin="8dp"
+            android:elevation="4dp"
+            android:background="@drawable/button_background" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnScheduleSession"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="140dp"
+            android:layout_height="80dp"
             android:text="My Schedule"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:backgroundTint="#4CAF50"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="12dp"/>
+            android:layout_margin="8dp"
+            android:elevation="4dp"
+            android:background="@drawable/button_background" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnViewBookedSessions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="140dp"
+            android:layout_height="80dp"
             android:text="Booked Sessions"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:backgroundTint="#43A047"
-            android:textColor="#ffffff"
-            android:layout_marginBottom="16dp"/>
+            android:layout_margin="8dp"
+            android:elevation="4dp"
+            android:background="@drawable/button_background" />
+    </GridLayout>
 
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:textStyle="bold"
-            android:backgroundTint="#D32F2F"
-            android:textColor="#ffffff"/>
-    </LinearLayout>
-
+    <!-- Logout Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:text="Logout"
+        android:layout_marginStart="100dp"
+        android:layout_marginEnd="100dp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
