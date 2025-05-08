@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ell.one.tutorlink.data_adapters.TutorAdapter;
-import ell.one.tutorlink.TutorModel;
 
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
@@ -41,7 +40,7 @@ public class activity_search_tutors extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_search_tutors);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.chatbot_interface), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
