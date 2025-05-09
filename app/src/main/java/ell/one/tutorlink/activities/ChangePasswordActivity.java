@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,9 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import ell.one.tutorlink.ProfileActivity;
+import ell.one.tutorlink.R;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 

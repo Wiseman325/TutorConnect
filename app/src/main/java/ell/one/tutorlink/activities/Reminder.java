@@ -1,8 +1,10 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import ell.one.tutorlink.R;
 
 public class Reminder extends AppCompatActivity {
 

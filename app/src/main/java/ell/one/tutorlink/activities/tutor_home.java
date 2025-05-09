@@ -1,7 +1,6 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.content.Intent;
@@ -14,6 +13,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import ell.one.tutorlink.ProfileActivity;
+import ell.one.tutorlink.R;
 
 public class tutor_home extends AppCompatActivity {
 

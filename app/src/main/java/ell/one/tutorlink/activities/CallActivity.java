@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +16,8 @@ import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationBut
 import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
 import java.util.Collections;
+
+import ell.one.tutorlink.R;
 
 public class CallActivity extends AppCompatActivity {
 

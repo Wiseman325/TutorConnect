@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import com.google.firebase.firestore.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import ell.one.tutorlink.R;
 import ell.one.tutorlink.data_adapters.BookingAdapter;
 import ell.one.tutorlink.models.BookingModel;
 
@@ -37,16 +38,16 @@ public class TutorBookings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_tutor_bookings);
+        setContentView(ell.one.tutorlink.R.layout.activity_tutor_bookings);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(ell.one.tutorlink.R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
         // Bind UI
-        recyclerView = findViewById(R.id.tutorBookingsRecycler);
+        recyclerView = findViewById(ell.one.tutorlink.R.id.tutorBookingsRecycler);
         btnBackToTutorHome = findViewById(R.id.btnBackToTutorHome);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

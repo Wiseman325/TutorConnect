@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import ell.one.tutorlink.R;
 
 /**
  * A simple {@link Fragment} subclass.

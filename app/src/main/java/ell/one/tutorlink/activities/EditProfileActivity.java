@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import ell.one.tutorlink.HelperClass;
+import ell.one.tutorlink.ProfileActivity;
+import ell.one.tutorlink.R;
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class EditProfileActivity extends AppCompatActivity {

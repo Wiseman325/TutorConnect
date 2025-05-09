@@ -9,7 +9,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp"
-    tools:context=".CallActivity">
+    tools:context=".activities.CallActivity">
 
     <!-- Secondary Text -->
     <TextView

@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.models;
 
 public class ChatMessage {
     private String text;

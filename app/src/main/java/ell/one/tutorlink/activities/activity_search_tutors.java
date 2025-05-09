@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +18,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import ell.one.tutorlink.R;
 import ell.one.tutorlink.data_adapters.TutorAdapter;
-import ell.one.tutorlink.TutorModel;
+import ell.one.tutorlink.models.TutorModel;
 
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;

@@ -17,6 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ell.one.tutorlink.activities.ChangePasswordActivity;
+import ell.one.tutorlink.activities.EditProfileActivity;
+import ell.one.tutorlink.activities.LoginActivity;
+import ell.one.tutorlink.activities.tutor_home;
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class ProfileActivity extends AppCompatActivity {

@@ -1,15 +1,13 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-
+import ell.one.tutorlink.ProfileActivity;
+import ell.one.tutorlink.R;
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class tutee_home extends AppCompatActivity {

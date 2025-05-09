@@ -1,7 +1,6 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,8 +20,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ell.one.tutorlink.R;
 import ell.one.tutorlink.data_adapters.ChatAdapter;
-import ell.one.tutorlink.ChatMessage;
+import ell.one.tutorlink.models.ChatMessage;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;

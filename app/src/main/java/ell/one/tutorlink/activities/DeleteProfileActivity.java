@@ -1,4 +1,4 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +27,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
+
+import ell.one.tutorlink.ProfileActivity;
+import ell.one.tutorlink.R;
 
 public class DeleteProfileActivity extends AppCompatActivity {
 

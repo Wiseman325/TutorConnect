@@ -3,12 +3,10 @@ package ell.one.tutorlink;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.Intent;
 import android.widget.EditText;
 
 
@@ -20,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ell.one.tutorlink.activities.LoginActivity;
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class SignupActivity extends AppCompatActivity {

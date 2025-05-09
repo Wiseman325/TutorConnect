@@ -1,10 +1,9 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -20,10 +19,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
+import ell.one.tutorlink.R;
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class set_availability extends AppCompatActivity {

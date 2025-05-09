@@ -1,11 +1,10 @@
-package ell.one.tutorlink;
+package ell.one.tutorlink.activities;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Button;
 import android.widget.EditText;
 import android.content.Intent;
 
@@ -18,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ell.one.tutorlink.R;
+import ell.one.tutorlink.SignupActivity;
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class LoginActivity extends AppCompatActivity {

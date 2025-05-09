@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 import ell.one.tutorlink.HelperClass;
-import ell.one.tutorlink.LoginActivity;
+import ell.one.tutorlink.activities.LoginActivity;
 import ell.one.tutorlink.SignupActivity;
-import ell.one.tutorlink.guest;
-import ell.one.tutorlink.tutee_home;
-import ell.one.tutorlink.tutor_home;
+import ell.one.tutorlink.activities.guest;
+import ell.one.tutorlink.activities.tutee_home;
+import ell.one.tutorlink.activities.tutor_home;
 
 public class FirebaseManager {
 
