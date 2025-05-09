@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Internet Access -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Microphone Access for Voice and Video Calls -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Optional: To Keep Screen On During Calls -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Optional: For Managing Network State (if needed for advanced handling) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TutorLink"
         tools:targetApi="31">
+        <activity
+            android:name=".CallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".ChatbotActivity"
             android:exported="false" />
@@ -54,38 +73,17 @@
             android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"
-            android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".DetailActivity"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".HistoryActivity"-->
-<!--            android:exported="false" />-->
+            android:exported="false" /> <!-- <activity -->
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".SplashActivity" -->
-        <!-- android:exported="true"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-<!--        <activity-->
-<!--            android:name=".CommentActivity"-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".AppointmentActivity"-->
-<!--            android:exported="false" />-->
+            android:exported="false" /> <!-- <activity -->
+
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".MainActivity"-->
-<!--            android:exported="false" />-->
+            android:exported="false" /> <!-- <activity -->
         <activity
             android:name=".SignupActivity"
             android:exported="true" />

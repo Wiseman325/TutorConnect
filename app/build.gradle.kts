@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.json:json:20231013")
-
+    implementation("com.github.ZEGOCLOUD:zego_uikit_prebuilt_call_android:+")
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-database")
