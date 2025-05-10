@@ -1,9 +1,9 @@
 package ell.one.tutorlink.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,13 +13,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import ell.one.tutorlink.ProfileActivity;
 import ell.one.tutorlink.R;
 
 public class tutor_home extends AppCompatActivity {
 
-    private TextView ewalletBalance;
+    private TextView ewalletBalance, welcomeText;
     private LinearLayout btnEditProfile, btnSetAvailability, btnSessionRequests, btnMyResources, btnLogout, btnScheduleSession, btnViewBookedSessions;
 
     @Override
@@ -27,6 +28,7 @@ public class tutor_home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.tutor_dashboard);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -34,6 +36,7 @@ public class tutor_home extends AppCompatActivity {
         });
 
         ewalletBalance = findViewById(R.id.ewalletBalance);
+        welcomeText = findViewById(R.id.welcomeText);
         btnEditProfile = findViewById(R.id.btnEditProfile);
         btnSetAvailability = findViewById(R.id.btnSetAvailability);
         btnSessionRequests = findViewById(R.id.btnSessionRequests);
@@ -42,41 +45,36 @@ public class tutor_home extends AppCompatActivity {
         btnLogout = findViewById(R.id.btnLogout);
         btnViewBookedSessions = findViewById(R.id.btnViewBookedSessions);
 
-        btnViewBookedSessions.setOnClickListener(v -> {
-            startActivity(new Intent(tutor_home.this, TutorBookings.class));
-        });
+        btnViewBookedSessions.setOnClickListener(v ->
+                startActivity(new Intent(tutor_home.this, TutorBookings.class))
+        );
 
-        // TODO: Later - fetch balance from Firestore
-        ewalletBalance.setText("E-Wallet Balance: R 0.00");
+        ewalletBalance.setText("E-Wallet Balance: R 0.00"); // TODO: Later fetch from Firestore
 
-        // Click Listeners
-        btnEditProfile.setOnClickListener(v -> {
-            // TODO: Replace with actual ProfileActivity
-            startActivity(new Intent(tutor_home.this, ProfileActivity.class));
-        });
+        // Set Dynamic Welcome Message
+        setWelcomeMessage();
 
-        btnSetAvailability.setOnClickListener(v -> {
-            // TODO: Replace with AvailabilityActivity
-            startActivity(new Intent(tutor_home.this, set_availability.class));
+        // Button Click Listeners
+        btnEditProfile.setOnClickListener(v ->
+                startActivity(new Intent(tutor_home.this, ProfileActivity.class))
+        );
 
-        });
+        btnSetAvailability.setOnClickListener(v ->
+                startActivity(new Intent(tutor_home.this, set_availability.class))
+        );
 
-        btnScheduleSession.setOnClickListener(v -> {
-            // TODO: Replace with AvailabilityActivity
-            startActivity(new Intent(tutor_home.this, ViewScheduleActivity.class));
-
-        });
+        btnScheduleSession.setOnClickListener(v ->
+                startActivity(new Intent(tutor_home.this, ViewScheduleActivity.class))
+        );
 
         btnSessionRequests.setOnClickListener(v -> {
-            // TODO: Replace with SessionRequestsActivity
             Toast.makeText(this, "Meeting Session Requests clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(tutor_home.this, MettingsActivity.class));
         });
 
-        btnMyResources.setOnClickListener(v -> {
-            // TODO: Replace with ResourcesActivity
-            Toast.makeText(this, "View Resources clicked", Toast.LENGTH_SHORT).show();
-        });
+        btnMyResources.setOnClickListener(v ->
+                Toast.makeText(this, "View Resources clicked", Toast.LENGTH_SHORT).show()
+        );
 
         btnLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
@@ -84,5 +82,24 @@ public class tutor_home extends AppCompatActivity {
             startActivity(new Intent(tutor_home.this, LoginActivity.class));
             finish();
         });
+    }
+
+    private void setWelcomeMessage() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            String displayName = currentUser.getDisplayName();
+            String email = currentUser.getEmail();
+
+            if (displayName != null && !displayName.isEmpty()) {
+                welcomeText.setText("Welcome, " + displayName + "!");
+            } else if (email != null) {
+                welcomeText.setText("Welcome, " + email + "!");
+            } else {
+                welcomeText.setText("Welcome, Tutor!");
+            }
+        } else {
+            welcomeText.setText("Welcome, Guest!");
+        }
     }
 }

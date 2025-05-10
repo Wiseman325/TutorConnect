@@ -30,6 +30,7 @@ public class set_availability extends AppCompatActivity {
     private String selectedDate = null, startTime = null, endTime = null;
 
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private FirebaseManager firebaseManager;
 
     @Override
@@ -45,13 +46,11 @@ public class set_availability extends AppCompatActivity {
 
         firebaseManager = new FirebaseManager(this);
 
-        // Bind buttons
         btnPickDate = findViewById(R.id.btnPickDate);
         btnPickStartTime = findViewById(R.id.btnPickStartTime);
         btnPickEndTime = findViewById(R.id.btnPickEndTime);
         btnSubmit = findViewById(R.id.btnSubmitSchedule);
 
-        // Event Listeners
         btnPickDate.setOnClickListener(v -> showDatePicker());
         btnPickStartTime.setOnClickListener(v -> showTimePicker(true));
         btnPickEndTime.setOnClickListener(v -> showTimePicker(false));
@@ -62,15 +61,22 @@ public class set_availability extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog picker = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             calendar.set(year, month, dayOfMonth);
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-            if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
-                Toast.makeText(this, "Only weekdays allowed (Mon–Fri)", Toast.LENGTH_SHORT).show();
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            Date selected = calendar.getTime();
+            Date today = new Date();
+
+            if (selected.before(today)) {
+                Toast.makeText(this, "Cannot select a past date", Toast.LENGTH_SHORT).show();
+            } else if (dayOfWeek == Calendar.SUNDAY) {
+                Toast.makeText(this, "Bookings are not allowed on Sundays", Toast.LENGTH_SHORT).show();
             } else {
-                selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                selectedDate = dateFormat.format(selected); // Now formatted as yyyy-MM-dd
                 btnPickDate.setText("Date: " + selectedDate);
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        picker.getDatePicker().setMinDate(System.currentTimeMillis()); // Prevent selecting past dates directly
         picker.show();
     }
 
@@ -95,7 +101,6 @@ public class set_availability extends AppCompatActivity {
             return;
         }
 
-        // Time logic validation
         try {
             Date start = timeFormat.parse(startTime);
             Date end = timeFormat.parse(endTime);
@@ -117,7 +122,7 @@ public class set_availability extends AppCompatActivity {
         }
 
         String userId = user.getUid();
-        String dateKey = selectedDate.replace("/", "-"); // Firestore-safe key
+        String dateKey = selectedDate; // Already formatted as yyyy-MM-dd, no need to replace characters
 
         firebaseManager.saveAvailabilityForDay(dateKey, startTime, endTime, new FirebaseManager.AvailabilitySaveListener() {
             @Override

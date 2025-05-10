@@ -11,7 +11,7 @@
     android:id="@+id/title"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:text="Your Schedule"
+    android:text="Schedule"
     android:textSize="20sp"
     android:textStyle="bold"
     android:textColor="@color/dark"
