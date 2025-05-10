@@ -64,7 +64,7 @@ public class CallActivity extends AppCompatActivity {
     private void setCallButtons(String targetUserID) {
         if (targetUserID.isEmpty()) return;
 
-        // Configure Voice Call Button
+        // Configure Voice Call Button two
         voiceCallButton.setIsVideoCall(false);
         voiceCallButton.setResourceID("zego_uikit_call"); // Ensure this matches ZegoCloud Console
         voiceCallButton.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID, targetUserID)));
