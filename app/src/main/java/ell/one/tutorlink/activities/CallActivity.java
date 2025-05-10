@@ -6,12 +6,10 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.zegocloud.uikit.prebuilt.call.invite.widget.ZegoSendCallInvitationButton;
 import com.zegocloud.uikit.service.defines.ZegoUIKitUser;
 
@@ -21,60 +19,59 @@ import ell.one.tutorlink.R;
 
 public class CallActivity extends AppCompatActivity {
 
-
     private EditText userIdEditText;
-    private TextView hey_user_text_view;
+    private TextView heyUserTextView;
     private ZegoSendCallInvitationButton voiceCallButton, videoCallButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_call);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         userIdEditText = findViewById(R.id.user_id_edit_text);
-        hey_user_text_view = findViewById(R.id.hey_user_text_view);
+        heyUserTextView = findViewById(R.id.hey_user_text_view);
         voiceCallButton = findViewById(R.id.voice_call_btn);
         videoCallButton = findViewById(R.id.video_call_btn);
 
-        String userID = getIntent().getStringExtra("userID");
-        hey_user_text_view.setText("Hey, " + userID);
+        // Get target user ID from Intent
+        String targetUserID = getIntent().getStringExtra("USER_ID");
+        userIdEditText.setText(targetUserID);
 
+        // Display current logged-in user info
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            heyUserTextView.setText("Hey, " + currentUser.getDisplayName());
+        } else {
+            heyUserTextView.setText("Hey, Guest");
+        }
+
+        // Set initial Call Buttons Configuration
+        setCallButtons(targetUserID);
+
+        // Listen for changes in Target User ID field
         userIdEditText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void afterTextChanged(Editable s) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String targetUserID = userIdEditText.getText().toString().trim();
-                setVoiceCall(targetUserID);
-                setVideoCall(targetUserID);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
+                String newTargetUserID = userIdEditText.getText().toString().trim();
+                setCallButtons(newTargetUserID);
             }
         });
     }
 
-    void setVoiceCall(String targetUserID) {
-        voiceCallButton.setIsVideoCall(false);
-        voiceCallButton.setResourceID("zego_uikit_call"); // Please fill in the resource ID name that has been configured in the ZEGOCLOUD's console here.
-        voiceCallButton.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserID)));
-    }
+    private void setCallButtons(String targetUserID) {
+        if (targetUserID.isEmpty()) return;
 
-    void setVideoCall(String targetUserID) {
+        // Configure Voice Call Button
+        voiceCallButton.setIsVideoCall(false);
+        voiceCallButton.setResourceID("zego_uikit_call"); // Ensure this matches ZegoCloud Console
+        voiceCallButton.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID, targetUserID)));
+
+        // Configure Video Call Button
         videoCallButton.setIsVideoCall(true);
-        videoCallButton.setResourceID("zego_uikit_call"); // Please fill in the resource ID name that has been configured in the ZEGOCLOUD's console here.
-        videoCallButton.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID,targetUserID)));
+        videoCallButton.setResourceID("zego_uikit_call"); // Ensure this matches ZegoCloud Console
+        videoCallButton.setInvitees(Collections.singletonList(new ZegoUIKitUser(targetUserID, targetUserID)));
     }
 }

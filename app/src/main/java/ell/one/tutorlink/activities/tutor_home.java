@@ -52,27 +52,25 @@ public class tutor_home extends AppCompatActivity {
         // Click Listeners
         btnEditProfile.setOnClickListener(v -> {
             // TODO: Replace with actual ProfileActivity
-            Toast.makeText(this, "Manage Profile clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(tutor_home.this, ProfileActivity.class));
         });
 
         btnSetAvailability.setOnClickListener(v -> {
             // TODO: Replace with AvailabilityActivity
-            Toast.makeText(this, "Set Availability clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(tutor_home.this, set_availability.class));
 
         });
 
         btnScheduleSession.setOnClickListener(v -> {
             // TODO: Replace with AvailabilityActivity
-            Toast.makeText(this, "View Schedule clicked", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(tutor_home.this, ViewScheduleActivity.class));
 
         });
 
         btnSessionRequests.setOnClickListener(v -> {
             // TODO: Replace with SessionRequestsActivity
-            Toast.makeText(this, "View Session Requests clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Meeting Session Requests clicked", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(tutor_home.this, MettingsActivity.class));
         });
 
         btnMyResources.setOnClickListener(v -> {

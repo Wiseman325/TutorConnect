@@ -44,7 +44,7 @@ public class tutee_home extends AppCompatActivity {
         });
 
         btnChatbot.setOnClickListener(v -> {
-            Intent intent = new Intent(tutee_home.this, ChatbotActivity.class);
+            Intent intent = new Intent(tutee_home.this, MettingsActivity.class);
             startActivity(intent);
         });
 
