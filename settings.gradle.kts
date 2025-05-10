@@ -16,9 +16,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven(url = "https://storage.zego.im/maven")   // Zego SDK Repository
+        maven(url = "https://www.jitpack.io")
     }
 }
 
 rootProject.name = "TutorLink"
 include(":app")
- 

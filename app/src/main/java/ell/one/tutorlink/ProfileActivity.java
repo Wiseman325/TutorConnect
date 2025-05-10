@@ -17,6 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ell.one.tutorlink.activities.ChangePasswordActivity;
+import ell.one.tutorlink.activities.EditProfileActivity;
+import ell.one.tutorlink.activities.LoginActivity;
+import ell.one.tutorlink.activities.tutor_home;
 import ell.one.tutorlink.database_handlers.FirebaseManager;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -33,7 +37,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.profile_view);
 
         profileBio = findViewById(R.id.profileBio);
         profileSpecialization = findViewById(R.id.profileSpecialization);
@@ -44,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileEmail = findViewById(R.id.profileEmail);
         editProfile = findViewById(R.id.editButton);
         changePassword = findViewById(R.id.changePassword);
-        bookAppointment = findViewById(R.id.book_app_text);
+//        bookAppointment = findViewById(R.id.book_app_text);
 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();

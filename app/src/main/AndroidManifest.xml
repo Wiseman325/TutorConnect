@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Internet Access -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Microphone Access for Voice and Video Calls -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Optional: To Keep Screen On During Calls -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Optional: For Managing Network State (if needed for advanced handling) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,84 +26,69 @@
         android:theme="@style/Theme.TutorLink"
         tools:targetApi="31">
         <activity
-            android:name=".ChatbotActivity"
+            android:name=".activities.CallActivity"
             android:exported="false" />
         <activity
-            android:name=".TutorBookings"
+            android:name=".activities.MettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".activity_tutee_bookings"
+            android:name=".activities.ChatbotActivity"
             android:exported="false" />
         <activity
-            android:name=".activity_book_session"
+            android:name=".activities.TutorBookings"
             android:exported="false" />
         <activity
-            android:name=".activity_tutor_detail"
+            android:name=".activities.activity_tutee_bookings"
             android:exported="false" />
         <activity
-            android:name=".activity_search_tutors"
+            android:name=".activities.activity_book_session"
             android:exported="false" />
         <activity
-            android:name=".ViewScheduleActivity"
+            android:name=".activities.activity_tutor_detail"
             android:exported="false" />
         <activity
-            android:name=".set_availability"
+            android:name=".activities.activity_search_tutors"
             android:exported="false" />
         <activity
-            android:name=".guest"
+            android:name=".activities.ViewScheduleActivity"
             android:exported="false" />
         <activity
-            android:name=".tutee_home"
+            android:name=".activities.set_availability"
             android:exported="false" />
         <activity
-            android:name=".tutor_home"
+            android:name=".activities.guest"
+            android:exported="false" />
+        <activity
+            android:name=".activities.tutee_home"
+            android:exported="false" />
+        <activity
+            android:name=".activities.tutor_home"
             android:exported="false"
             android:theme="@style/Theme.TutorLink" />
         <activity
-            android:name=".DeleteProfileActivity"
+            android:name=".activities.DeleteProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name=".activities.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HistoryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EditProfileActivity"
+            android:name=".activities.ForgotPasswordActivity"
             android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".SplashActivity" -->
-        <!-- android:exported="true"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
         <activity
-            android:name=".CommentActivity"
-            android:exported="false" />
+            android:name=".activities.EditProfileActivity"
+            android:exported="false" /> <!-- <activity -->
         <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
+            android:exported="false" /> <!-- <activity -->
+
         <activity
-            android:name=".AppointmentActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
+            android:name=".activities.LoginActivity"
+            android:exported="false" /> <!-- <activity -->
         <activity
             android:name=".SignupActivity"
             android:exported="true" />
         <activity
-            android:name=".IntroActivity"
+            android:name=".activities.IntroActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ell.one.tutorlink.ChatMessage;
+import ell.one.tutorlink.models.ChatMessage;
 import ell.one.tutorlink.R;
-import ell.one.tutorlink.ChatMessage;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

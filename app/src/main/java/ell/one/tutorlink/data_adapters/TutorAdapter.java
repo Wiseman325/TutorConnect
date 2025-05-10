@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ell.one.tutorlink.R;
-import ell.one.tutorlink.TutorModel;
+import ell.one.tutorlink.models.TutorModel;
 
 public class TutorAdapter extends RecyclerView.Adapter<TutorAdapter.TutorViewHolder> {
 
