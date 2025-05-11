@@ -112,13 +112,13 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onUserProfileLoaded(HelperClass profile) {
                 if (profile != null) {
-                    profile_name = profile.name;
+                    profile_name = profile.getName();
                     profile_email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                    profile_phone = profile.phoneNo;
+                    profile_phone = profile.getPhoneNo();
 
-                    profile_bio = profile.bio;
-                    profile_specialization = profile.specialization;
-                    profile_rate = profile.rate;
+                    profile_bio = profile.getBio();
+                    profile_specialization = profile.getSpecialization();
+                    profile_rate = profile.getRate();
 
                     profileName.setText(profile_name);
                     profileEmail.setText(profile_email);

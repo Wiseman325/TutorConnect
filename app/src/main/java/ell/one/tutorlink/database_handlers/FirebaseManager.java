@@ -162,9 +162,22 @@ public class FirebaseManager {
         }
     }
 
-
-    public interface OnUserProfileRetrieved {
-        void onUserProfileLoaded(HelperClass profile);
+    public void updateUserProfile(HelperClass profileData, OnProfileUpdateListener listener) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            db.collection("users").document(user.getUid())
+                    .set(profileData, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Profile updated successfully.");
+                        listener.onUpdateSuccess();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Failed to update profile", e);
+                        listener.onUpdateFailure(e);
+                    });
+        } else {
+            listener.onUpdateFailure(new Exception("No user signed in."));
+        }
     }
 
     public void getUserProfile(OnUserProfileRetrieved callback) {
@@ -177,39 +190,24 @@ public class FirebaseManager {
                             HelperClass profile = snapshot.toObject(HelperClass.class);
                             callback.onUserProfileLoaded(profile);
                         } else {
-                            Log.w(TAG, "getUserProfile: Document does not exist");
+                            Log.w(TAG, "User profile does not exist.");
                             callback.onUserProfileLoaded(null);
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Log.e(TAG, "getUserProfile: Failed to retrieve", e);
+                        Log.e(TAG, "Failed to retrieve user profile.", e);
                         callback.onUserProfileLoaded(null);
                     });
         }
     }
 
+    public interface OnUserProfileRetrieved {
+        void onUserProfileLoaded(HelperClass profile);
+    }
 
     public interface OnProfileUpdateListener {
         void onUpdateSuccess();
         void onUpdateFailure(Exception e);
-    }
-
-    public void updateUserProfile(HelperClass profileData, OnProfileUpdateListener listener) {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            db.collection("users").document(user.getUid())
-                    .set(profileData, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, "updateUserProfile: Update successful");
-                        listener.onUpdateSuccess();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "updateUserProfile: Failed to update", e);
-                        listener.onUpdateFailure(e);
-                    });
-        } else {
-            listener.onUpdateFailure(new Exception("No user signed in"));
-        }
     }
 
 
