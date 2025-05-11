@@ -1,16 +1,13 @@
 package ell.one.tutorlink.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +25,7 @@ public class activity_book_session extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
-    private ListView timeSlotListView;
+    private RecyclerView timeSlotRecyclerView;
     private List<String> availableSlots = new ArrayList<>();
     private List<DocumentSnapshot> slotDocuments = new ArrayList<>();
     private String tutorId;
@@ -36,18 +33,11 @@ public class activity_book_session extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_book_session);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        timeSlotListView = findViewById(R.id.timeSlotListView);
+        timeSlotRecyclerView = findViewById(R.id.timeSlotRecyclerView);
 
         tutorId = getIntent().getStringExtra("tutorId");
         if (tutorId == null || tutorId.trim().isEmpty()) {
@@ -57,11 +47,6 @@ public class activity_book_session extends AppCompatActivity {
         }
 
         loadAvailableSlots();
-
-        timeSlotListView.setOnItemClickListener((parent, view, position, id) -> {
-            DocumentSnapshot selectedDoc = slotDocuments.get(position);
-            bookSession(selectedDoc);
-        });
     }
 
     private void loadAvailableSlots() {
@@ -85,8 +70,15 @@ public class activity_book_session extends AppCompatActivity {
                         }
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, availableSlots);
-                    timeSlotListView.setAdapter(adapter);
+                    if (availableSlots.isEmpty()) {
+                        Toast.makeText(this, "No available slots. Please check again later.", Toast.LENGTH_LONG).show();
+                    }
+
+                    timeSlotRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+                    ell.one.tutorlink.adapters.SlotAdapter adapter = new ell.one.tutorlink.adapters.SlotAdapter(availableSlots, position ->
+                            bookSession(slotDocuments.get(position))
+                    );
+                    timeSlotRecyclerView.setAdapter(adapter);
                 })
                 .addOnFailureListener(e -> {
                     Log.e("BookSession", "Error loading availability", e);
@@ -122,11 +114,15 @@ public class activity_book_session extends AppCompatActivity {
                             .delete()
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, "Session booked successfully!", Toast.LENGTH_SHORT).show();
+                                // Redirect to student dashboard
+                                Intent intent = new Intent(activity_book_session.this, tutee_home.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                                 finish();
                             })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(this, "Booked, but failed to remove availability.", Toast.LENGTH_SHORT).show();
-                            });
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "Booked, but failed to remove availability.", Toast.LENGTH_SHORT).show()
+                            );
                 })
                 .addOnFailureListener(e -> {
                     Log.e("BookSession", "Booking failed", e);

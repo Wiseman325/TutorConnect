@@ -3,6 +3,7 @@ package ell.one.tutorlink.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +15,7 @@ public class tutee_home extends AppCompatActivity {
 
     private LinearLayout btnSearchTutors, btnProfile, btnChatbot, btnLogout;
     private FirebaseManager firebaseManager;
+    private TextView welcomeMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class tutee_home extends AppCompatActivity {
 
         firebaseManager = new FirebaseManager(this);
 
+        welcomeMessage = findViewById(R.id.welcomeMessage);
         btnSearchTutors = findViewById(R.id.btnSearchTutors);
         btnProfile = findViewById(R.id.btnProfile);
         btnChatbot = findViewById(R.id.btnChatbot);
@@ -54,6 +57,25 @@ public class tutee_home extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+        });
+
+        setWelcomeMessage();
+    }
+
+    private void setWelcomeMessage() {
+        firebaseManager.getUserProfile(profile -> {
+            if (profile != null) {
+                String name = profile.getName();
+                String role = profile.getSpecialization() != null ? "Tutor" : "Tutee"; // Simple role check
+
+                if (name == null || name.isEmpty()) {
+                    welcomeMessage.setText("Hello " + role + "!");
+                } else {
+                    welcomeMessage.setText("Hello " + name + "!");
+                }
+            } else {
+                welcomeMessage.setText("Hello Tutee!");
+            }
         });
     }
 }

@@ -26,7 +26,7 @@ app:cardElevation="6dp">
         android:id="@+id/tutorSpecialization"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Specialization"
+        android:text="Subject Teaching: "
         android:textSize="14sp"
         android:textColor="@android:color/darker_gray"
         android:layout_marginTop="4dp" />
@@ -37,7 +37,7 @@ app:cardElevation="6dp">
         android:layout_height="wrap_content"
         android:text="R 200/hr"
         android:textSize="14sp"
-        android:textColor="@android:color/holo_green_dark"
+        android:textColor="@color/dark_red"
         android:layout_marginTop="4dp" />
 
     <TextView

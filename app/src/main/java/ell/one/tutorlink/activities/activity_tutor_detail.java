@@ -17,7 +17,7 @@ import ell.one.tutorlink.R;
 public class activity_tutor_detail extends AppCompatActivity {
 
     private TextView nameText, specializationText, rateText, bioText;
-    private Button btnGoBack, btnBookNow;
+    private Button btnBookNow;
     private String tutorId;
 
     @Override
@@ -37,7 +37,6 @@ public class activity_tutor_detail extends AppCompatActivity {
         specializationText = findViewById(R.id.detailTutorSpecialization);
         rateText = findViewById(R.id.detailTutorRate);
         bioText = findViewById(R.id.detailTutorBio);
-        btnGoBack = findViewById(R.id.btnGoBack);
         btnBookNow = findViewById(R.id.btnBookNow);
 
         // Get intent data
@@ -50,12 +49,11 @@ public class activity_tutor_detail extends AppCompatActivity {
 
         // Populate UI
         if (name != null) nameText.setText(name);
-        if (specialization != null) specializationText.setText("Specialization: " + specialization);
+        if (specialization != null) specializationText.setText("Subject: " + specialization);
         if (rate != null) rateText.setText("Rate: R" + rate + "/hr");
         if (bio != null) bioText.setText(bio);
 
         // Back button logic
-        btnGoBack.setOnClickListener(v -> finish());
 
         // Book Now button logic
         btnBookNow.setOnClickListener(v -> {

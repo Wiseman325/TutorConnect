@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="25dp"
+    android:padding="35dp"
     android:background="@color/white"
     tools:context=".activities.tutee_home">
 
@@ -30,6 +30,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/brown_background"
         app:layout_constraintTop_toBottomOf="@id/tuteeHomeTitle"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +47,25 @@
         android:inputType="number"
         android:background="@drawable/brown_background"
         android:padding="12dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         app:layout_constraintTop_toBottomOf="@id/specializationSpinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- EditText for Minimum Rating -->
+    <EditText
+        android:id="@+id/ratingEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Minimum Rating (e.g., 3)"
+        android:inputType="numberDecimal"
+        android:background="@drawable/brown_background"
+        android:padding="12dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintTop_toBottomOf="@id/priceEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -58,8 +78,8 @@
         android:text="Search"
         android:textStyle="bold"
         android:textColor="@android:color/white"
-        android:backgroundTint="@color/green"
-        app:layout_constraintTop_toBottomOf="@id/priceEditText"
+        android:backgroundTint="@color/dark_red"
+        app:layout_constraintTop_toBottomOf="@id/ratingEditText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -70,6 +90,8 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:scrollbars="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
         app:layout_constraintTop_toBottomOf="@id/searchButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
