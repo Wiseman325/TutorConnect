@@ -227,7 +227,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         Intent intent;
                         if ("tutor".equalsIgnoreCase(role)) {
-                            intent = new Intent(EditProfileActivity.this, ProfileActivity.class); // Tutor profile screen
+                            intent = new Intent(EditProfileActivity.this, tutor_home.class); // Tutor profile screen
                         } else if ("tutee".equalsIgnoreCase(role)) {
                             intent = new Intent(EditProfileActivity.this, tutee_home.class); // Student dashboard/home
                         } else {
