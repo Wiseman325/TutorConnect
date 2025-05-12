@@ -1,17 +1,12 @@
 package ell.one.tutorlink.activities;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,25 +17,18 @@ import ell.one.tutorlink.R;
 
 public class MettingsActivity extends AppCompatActivity {
 
-    private EditText userIdEditText;
+    private EditText targetUserIdEditText;
     private Button startButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mettings);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        userIdEditText = findViewById(R.id.user_id_edit_text);
+        targetUserIdEditText = findViewById(R.id.user_id_edit_text);
         startButton = findViewById(R.id.start_btn);
 
-        startButton.setOnClickListener((v) -> {
+        startButton.setOnClickListener(v -> {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
             if (currentUser == null) {
@@ -48,27 +36,31 @@ public class MettingsActivity extends AppCompatActivity {
                 return;
             }
 
-            String userID = currentUser.getUid();
+            String currentUserId = currentUser.getUid();
             String userName = currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Unknown User";
+            String targetUserId = targetUserIdEditText.getText().toString().trim();
 
-            Toast.makeText(MettingsActivity.this, "Starting call for User ID: " + userID, Toast.LENGTH_SHORT).show();
+            if (targetUserId.isEmpty()) {
+                Toast.makeText(this, "Please enter the target User ID.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            startService(userID, userName);
+            Toast.makeText(this, "Starting call with User ID: " + targetUserId, Toast.LENGTH_SHORT).show();
+
+            startService(currentUserId, userName);
 
             Intent intent = new Intent(MettingsActivity.this, CallActivity.class);
-            intent.putExtra("USER_ID", userID);
+            intent.putExtra("USER_ID", targetUserId); // Correct Target User ID
             startActivity(intent);
         });
     }
 
-    void startService(String userID, String userName) {
-        Application application = getApplication();
-        long appID = 2032483569;
+    private void startService(String userID, String userName) {
+        long appID = 2032483569L;
         String appSign = "2c601d30cecb65516e0b2b5e605ea73523335c0f993b57d532450ff58535662c";
 
-        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
-
-        ZegoUIKitPrebuiltCallService.init(application, appID, appSign, userID, userName, callInvitationConfig);
+        ZegoUIKitPrebuiltCallInvitationConfig config = new ZegoUIKitPrebuiltCallInvitationConfig();
+        ZegoUIKitPrebuiltCallService.init(getApplication(), appID, appSign, userID, userName, config);
     }
 
     @Override

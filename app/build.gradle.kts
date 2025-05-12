@@ -49,6 +49,9 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-firestore")
     implementation("androidx.gridlayout:gridlayout:1.0.0")
+    implementation("com.github.PayHereDevs:payhere-android-sdk:v3.0.17")
+    implementation("androidx.appcompat:appcompat:1.6.0") // ignore if you have already added
+    implementation("com.google.code.gson:gson:2.8.0") // ignore if you have already added
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     testImplementation(libs.junit)

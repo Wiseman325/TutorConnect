@@ -97,6 +97,9 @@ public class activity_book_session extends AppCompatActivity {
         String end = slotDoc.getString("endTime");
         String docId = slotDoc.getId();
 
+        // ✅ Retrieve price from Firestore (default to 100 if not found)
+        double price = slotDoc.getDouble("price") != null ? slotDoc.getDouble("price") : 100.0;
+
         Map<String, Object> booking = new HashMap<>();
         booking.put("tuteeId", currentUser.getUid());
         booking.put("tutorId", tutorId);
@@ -104,6 +107,7 @@ public class activity_book_session extends AppCompatActivity {
         booking.put("startTime", start);
         booking.put("endTime", end);
         booking.put("status", "pending");
+        booking.put("price", price);
 
         db.collection("bookings")
                 .add(booking)
@@ -114,8 +118,25 @@ public class activity_book_session extends AppCompatActivity {
                             .delete()
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, "Session booked successfully!", Toast.LENGTH_SHORT).show();
-                                // Redirect to student dashboard
-                                Intent intent = new Intent(activity_book_session.this, tutee_home.class);
+
+                                // ✅ Pass all required values to PaymentActivity
+                                Intent intent = new Intent(activity_book_session.this, PaymentActivity.class);
+                                intent.putExtra("tutorId", tutorId);
+                                intent.putExtra("date", date);
+                                intent.putExtra("startTime", start);
+                                intent.putExtra("endTime", end);
+                                intent.putExtra("docId", docId);
+                                intent.putExtra("price", price);
+
+                                // Student Info
+                                String studentName = currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Student";
+                                String studentEmail = currentUser.getEmail() != null ? currentUser.getEmail() : "student@example.com";
+                                String studentPhone = "0000000000"; // You can collect this from user profile if available.
+
+                                intent.putExtra("studentName", studentName);
+                                intent.putExtra("studentEmail", studentEmail);
+                                intent.putExtra("studentPhone", studentPhone);
+
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();

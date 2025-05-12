@@ -18,6 +18,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven(url = "https://storage.zego.im/maven")   // Zego SDK Repository
         maven(url = "https://www.jitpack.io")
+        maven(url = "https://jitpack.io")
     }
 }
 
